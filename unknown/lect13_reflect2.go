@@ -60,6 +60,7 @@ func main() {
 	fmt.Printf("%#v\n\n", t.FieldByIndex( []int{0,2} ))	// Age
 	fmt.Printf("%#v\n\n", t.FieldByIndex( []int{0,3} ))	// nil
 
+	fmt.Printf("%#v\n\n", t.FieldByIndex( []int{1} ))	// title
 }
 
 
