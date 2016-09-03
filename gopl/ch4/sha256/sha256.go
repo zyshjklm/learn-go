@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"crypto/sha256"
 	"crypto/sha512"
+    "github.com/learn-go/gopl/ch4/popcount"
 )
 
 func main() {
@@ -17,6 +18,10 @@ func main() {
 	// false
 	// [32]uint8
 
+// exercise 4.1
+    fmt.Printf("length: %d of c1\n", popcount.PopCount(c1))
+    fmt.Printf("length: %d of c2\n", popcount.PopCount(c2))
+
 // exercise 4.2 
 	c3 := sha512.Sum384([]byte("x"))
 	c4 := sha512.Sum512([]byte("X"))
@@ -27,4 +32,6 @@ func main() {
 	// 3173f0564ab9462b0978a765c1283f96f05ac9e9f8361ee1006dc905c153d85bf0e4c45622e5e990abcf48fb5192ad34722e8d6a723278b39fef9e4f9fc62378
 	// [48]uint8
 	// [64]uint8
+    fmt.Printf("length: %d of c3\n", popcount.PopCount48(c3))
+    fmt.Printf("length: %d of c4\n", popcount.PopCount64(c4))
 }
