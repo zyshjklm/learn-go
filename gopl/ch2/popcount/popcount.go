@@ -4,9 +4,24 @@ package popcount
 
 // pc[i] is the population count of i.
 var pc [256]byte
+/*
+note:
+    1 byte is 8-bits. value from 0-255,
+    so pc is 256-length.
+    the max value of a pop-count is 8 of a byte.
+    so type use byte.
+*/
 
 /*
     initial pc[]. 
+        each byte is zero.
+    for i = 0..255. pc[i] is the count if i.
+    pc[0] = 0,
+    for i = 1..255. pc[i] is the sum of:
+        1) bit7-1 of i, -> i/2
+        2) bit  0 of i, -> i%2
+    so below three formula are equivalent.
+
     pc[i] = pc[i/2] + byte(i%2)
     pc[i] = pc[i/2] + byte(i)%2
     pc[i] = pc[i/2] + byte(i&1)
