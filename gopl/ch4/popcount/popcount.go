@@ -27,7 +27,16 @@ func PopCount48(src [48]uint8) int {
     }
 	return sum
 }
+
 func PopCount64(src [64]uint8) int {
+    var sum int
+    for i := range src {
+        sum += int(pc[byte(i)])
+    }
+	return sum
+}
+
+func PopCountSlice(src []uint8) int {
     var sum int
     for i := range src {
         sum += int(pc[byte(i)])

@@ -21,6 +21,8 @@ func main() {
 // exercise 4.1
     fmt.Printf("length: %d of c1\n", popcount.PopCount(c1))
     fmt.Printf("length: %d of c2\n", popcount.PopCount(c2))
+    fmt.Printf("length: %d of c1\n", popcount.PopCountSlice(c1[:]))
+    fmt.Printf("length: %d of c2\n", popcount.PopCountSlice(c2[:]))
 
 // exercise 4.2 
 	c3 := sha512.Sum384([]byte("x"))
@@ -34,4 +36,6 @@ func main() {
 	// [64]uint8
     fmt.Printf("length: %d of c3\n", popcount.PopCount48(c3))
     fmt.Printf("length: %d of c4\n", popcount.PopCount64(c4))
+    fmt.Printf("length: %d of c3\n", popcount.PopCountSlice(c3[:]))
+    fmt.Printf("length: %d of c4\n", popcount.PopCountSlice(c4[:]))
 }
