@@ -36,3 +36,12 @@ functions
 * return values may be named and act just like variables. -- for short function.
 
 
+variables
+
+the var statement declares a list of variables, the type is last.
+a var statement can be at package or function level.
+
+a var declaration can include initializers. if an initializer is present, the type can be omitted; the variable will take the type of the initializer.
+
+**inside a function**, the := short assignment statement can be used in place of a `var` declaration with implicit type.
+
