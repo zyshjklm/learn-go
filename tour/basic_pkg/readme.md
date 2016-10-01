@@ -27,3 +27,12 @@ after importing a package, you can refer to the name it exports.
 a name is exported if it begins with a capital letter, like math.Pi.
 
 
+functions
+
+* zero or more arguments. 
+* the type comes after the variable name.
+* two or more consecutive named func parameters share a type, you can omit the type from all but the last.
+* can return any number of results.
+* return values may be named and act just like variables. -- for short function.
+
+
