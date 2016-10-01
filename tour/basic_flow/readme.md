@@ -70,3 +70,15 @@ the deferred call's **arguments** are evaluated immediately. but the function ca
 
 deferred function calls are pushed onto a stack. when the function returns, it deferred calls are executed in last-in-first-out order.
 
+### 2.1 Defer, Panic and Recover
+
+refer: https://blog.golang.org/defer-panic-and-recover
+
+#### defer
+
+a **defer statement** pushes a function call onto a list. the list of saved calls is executed after the surrounding function returns. 
+
+defer is commonly used to simplify functions that perform various clean-up actions.
+
+for example, use defer to close file, defer statements allow us to think about closing each file right after opening it, guaranteeing that, regardless of the number of return statement in the function, the file `will` be closed.
+
