@@ -22,5 +22,15 @@ for {
 
 
 
+**if**
+
+the `if` statement looks as it does in C or Java, except that the `( )` are gone and the `{ }` are required.
+
+if with a short statement: if statement can start with a short statement execute before the condition.
+
+variables declared by the statement are only in scope untile the end of the `if`. so variables are also available inside any of the `else` blocks.
+
+
+
 
 
