@@ -7,7 +7,7 @@ import (
     "bufio"
     "strconv"
 
-    "github.com/learn-go/gopl/ch2/tempconv"
+    "github.com/jungle85gopy/learn-go/gopl/ch2/tempconv"
 )
 
 func main() {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/learn-go/unknown/lect15_proj/goTest"
+	"github.com/jungle85gopy/learn-go/unknown/lect15_proj/goTest"
 )
 
 func main() {

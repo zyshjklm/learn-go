@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 	"html/template"
-	"github.com/learn-go/gopl/ch4/github"
+	"github.com/jungle85gopy/learn-go/gopl/ch4/github"
 
 )
 

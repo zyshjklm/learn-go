@@ -6,7 +6,7 @@ package popcount_test
 import (
 	"testing"
 
-	"github.com/learn-go/gopl/ch2/popcount"
+	"github.com/jungle85gopy/learn-go/gopl/ch2/popcount"
 )
 
 // -- Alternative implementations --

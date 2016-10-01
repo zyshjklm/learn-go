@@ -2,7 +2,7 @@
 package main
 
 import (
-    "github.com/learn-go/gopl/ch2/tempconv0"
+    "github.com/jungle85gopy/learn-go/gopl/ch2/tempconv0"
     "fmt"
 )
 

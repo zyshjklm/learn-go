@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"crypto/sha256"
 	"crypto/sha512"
-    "github.com/learn-go/gopl/ch4/popcount"
+    "github.com/jungle85gopy/learn-go/gopl/ch4/popcount"
 )
 
 func main() {
