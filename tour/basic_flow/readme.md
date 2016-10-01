@@ -60,3 +60,13 @@ switch i {
 
 switch without a condition is the same to `switch true`.
 
+
+
+**defer**
+
+a `defer` statement defers the executiong of a function until the surrounding function returns.
+
+the deferred call's **arguments** are evaluated immediately. but the function call is not executed until the surrounding function returns.
+
+deferred function calls are pushed onto a stack. when the function returns, it deferred calls are executed in last-in-first-out order.
+
