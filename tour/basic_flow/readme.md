@@ -82,3 +82,11 @@ defer is commonly used to simplify functions that perform various clean-up actio
 
 for example, use defer to close file, defer statements allow us to think about closing each file right after opening it, guaranteeing that, regardless of the number of return statement in the function, the file `will` be closed.
 
+the behavior of defer is straighforward and predictable(直接了当，且可预测）. there are three simple rules:
+
+- a defer function's arguments are evaluated when the defer statement is evaluated.
+- deferred function calls are executed in Last-in-First-out order after the surrounding function returns
+- deferred functions may read and assign to the returning function's named return values.
+
+rule 3 is convenient for modifying the error return code of a function.
+
