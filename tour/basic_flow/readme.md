@@ -40,3 +40,23 @@ root := 1.0
 root = root - (root*root - x) / (2*root)
 ```
 
+
+
+**switch**
+
+a case body breaks automatically, unless it ends with a `fallthrough` statement.
+
+switch cases evaluate from top to bottom, stopping when a cases succeeds.
+
+```go
+switch i {
+  case 0:
+  	fmt.Println("it 0")
+  case f():
+  	// does not call f() if i == 0.
+    fmt.Println("mit f()")
+}
+```
+
+switch without a condition is the same to `switch true`.
+
