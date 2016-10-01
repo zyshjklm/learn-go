@@ -32,5 +32,11 @@ variables declared by the statement are only in scope untile the end of the `if`
 
 
 
+**exercise: loops and functions for square root**
 
+```go
+root := 1.0
+
+root = root - (root*root - x) / (2*root)
+```
 
