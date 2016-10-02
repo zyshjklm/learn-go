@@ -90,3 +90,28 @@ the behavior of defer is straighforward and predictable(直接了当，且可预
 
 rule 3 is convenient for modifying the error return code of a function.
 
+#### Panic and Recover 
+
+**panic** is a built-in function that stops the ordinary flow of control and begins `panicking`.
+
+when the func F calls panic, execution of F stops, any deferred func in F are executed normally, and then F return to its caller.
+
+the process continues up the stack until all functions in the current gorountine have returned, at which point the program crashes. 内层函数的panic会沿着stack一直向上层传导，层层传递panic异常信息，最终导致最外层的函数崩溃。
+
+**recover** is a built-in function that regains control of a panicking gorouting. recover is only useful inside deferred functions.
+
+if the current goroutine is panicking, a call to recover will capture the value given to panic and resume normal execution.
+
+
+
+defer usage: 
+
+* file
+  * f = os.Open(xxx)
+  * defer f.Close()
+* mutex
+  * mu.Lock()
+  * defer mu.Unlock()
+* header & footer
+  * printHeader()
+  * defer printFooter()
