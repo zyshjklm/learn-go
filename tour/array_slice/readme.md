@@ -159,6 +159,20 @@ func append( s []T, x ...T) []T
 
 
 
+#### 4. range
+
+the `range` form of the `for` loop iterates over a slice or map.
+
+```go
+pow := make([]int, 10)
+// index, value
+for i, v := range pow {}
+// index
+for i := range pow {}
+// value
+for _, v := range pow {}
+```
+
 
 
 
