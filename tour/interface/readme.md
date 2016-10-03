@@ -12,7 +12,30 @@ implicit interfacers decouple implementation packages from the packages that def
 
 
 
+**Stringers**
 
+one of the most ubiquitous interface is `Stringer` defined by the `fmt` package.
+
+```go
+type Stringer interface {
+   String() string
+}
+```
+
+a `Stringer ` is a type that can describe itself as a string. the `fmt` package (and many others ) look for this interface to print values.
+
+ 
+
+IPAddr Stringers.
+
+```go
+IPAddr{8, 8, 4, 4}
+```
+
+byte to string:
+
+* byte to int
+* use striconv.Itoa() to trans int to string.
 
 
 
