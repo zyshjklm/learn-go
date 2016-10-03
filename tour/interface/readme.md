@@ -39,3 +39,26 @@ byte to string:
 
 
 
+#### Errors
+
+Go programs express error state with `error` values.
+
+the `error` type is a built-in interface similar to `fmt.Stringer`:
+
+```go
+type error interface {
+   Error() string
+}
+```
+
+function often return an `error` value, and callling code should handle errors by testing whether the error equals `nil`.
+
+```go
+i, err := strconv.Atoi("42")
+if err != nil {
+  fmt.Printf("couldn't convert number: %v\n", err)
+}
+fmt.Println("Converted integer:", i)
+```
+
+a nil error denotes success.
