@@ -53,3 +53,9 @@ the loop `for i := range c` receives values from the channel repeatedly until it
 
 closing channel only necessary when the receiver must be told there are no more values coming. such as to terminate a range loop.
 
+#### 4 select
+
+the `select` statement lefts a gorouting wait on multiple communication operations.
+
+a `select` blocks until one of its case run, then it executes that case. it chooses one at random if multiple are ready.
+
