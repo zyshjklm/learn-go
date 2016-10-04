@@ -27,3 +27,29 @@ channels must be created before use.
 
 by default, sends and receives block until the other side is ready. this allows goroutines to synchronize without explicit lock or condition variables.
 
+#### 2 buffered channel
+
+channels can be buffered. 
+
+```go
+ch := make(chan int, BUF_LEN)
+```
+
+sends to a buffered channel block only when the buffer is full.
+
+receives block when the buffer is empty.
+
+#### 3 range and close
+
+a sender can `close` a channel to indicate that no more values will be sent. receivers can test whether a channel has been closed by assigning a second paramter to the receiver expression:
+
+```go
+v, ok := <-ch
+```
+
+ok is `false` if there are no more values to receive and the channel will closed. (sending on a closed channel will cause a panic.)
+
+the loop `for i := range c` receives values from the channel repeatedly until it is closed.
+
+closing channel only necessary when the receiver must be told there are no more values coming. such as to terminate a range loop.
+
