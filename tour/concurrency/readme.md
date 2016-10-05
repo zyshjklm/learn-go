@@ -80,3 +80,25 @@ c1 = <- ch1
 
 ```
 
+
+
+## end
+
+** Where to Go from here...**
+
+The [Go Documentation](http://golang.org/doc/) is a great place to start. It contains references, tutorials, videos, and more.
+
+To learn how to organize and work with Go code, watch [this screencast](http://www.youtube.com/watch?v=XCsL89YtqCs) or read [How to Write Go Code](http://golang.org/doc/code.html).
+
+If you need help with the standard library, see the [package reference](http://golang.org/pkg/). For help with the language itself, you might be surprised to find the [Language Spec](http://golang.org/ref/spec) is quite readable.
+
+To further explore Go's concurrency model, watch [Go Concurrency Patterns](http://www.youtube.com/watch?v=f6kdp27TYZs) ([slides](http://talks.golang.org/2012/concurrency.slide)) and [Advanced Go Concurrency Patterns](https://www.youtube.com/watch?v=QDDwwePbDtw) ([slides](http://talks.golang.org/2013/advconc.slide)) and read the [Share Memory by Communicating](http://golang.org/doc/codewalk/sharemem/)codewalk.
+
+To get started writing web applications, watch [A simple programming environment](http://vimeo.com/53221558) ([slides](http://talks.golang.org/2012/simple.slide)) and read the [Writing Web Applications](http://golang.org/doc/articles/wiki/) tutorial.
+
+The [First Class Functions in Go](http://golang.org/doc/codewalk/functions/) codewalk gives an interesting perspective on Go's function types.
+
+The [Go Blog](http://blog.golang.org/) has a large archive of informative Go articles.
+
+Visit [golang.org](http://golang.org/) for more.
+
