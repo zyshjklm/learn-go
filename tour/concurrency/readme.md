@@ -59,3 +59,24 @@ the `select` statement lefts a gorouting wait on multiple communication operatio
 
 a `select` blocks until one of its case run, then it executes that case. it chooses one at random if multiple are ready.
 
+
+
+#### 5 Walk()
+
+go error:
+
+```go
+for i := range ch {
+    fmt.Println(i)
+}
+// fatal error: all goroutines are asleep - deadlock!
+// beause: there is no close(ch) to close channel ch.
+
+var c1 int
+c1 <- ch1
+// invalid operation: c1 <- ch1 (send to non-chan type int)
+// because: you should write an assignment: like:
+c1 = <- ch1
+
+```
+
