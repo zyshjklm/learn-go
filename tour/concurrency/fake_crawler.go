@@ -2,6 +2,7 @@ package main
 
 import (
     "fmt"
+    "sync"
 )
 
 type Fetcher interface {
@@ -18,8 +19,8 @@ type fakeResult struct {
 // fakeFetcher is Fetcher that returns canned results.
 type fakeFetcher map[string]*fakeResult
 
-func (f fakeFetcher) Fetch(url string) (string, []string, error) {
-    if res, ok := f[url]; ok {
+func (f *fakeFetcher) Fetch(url string) (string, []string, error) {
+    if res, ok := (*f)[url]; ok {
         return res.body, res.urls, nil
     }
     return "", nil, fmt.Errorf("not found: %s", url)
@@ -28,28 +29,67 @@ func (f fakeFetcher) Fetch(url string) (string, []string, error) {
 
 // Crawl uses fetcher to recursively crawl
 // pages starting with url, to a maximum of depth.
-func Crawl(url string, depth int, fetcher Fetcher) {
-    // TODO: Fetch URLs in parallel.
-    // TODO: Don't fetch the same URL twice.
-    // This implementation doesn't do either:
+func Crawl(url string, depth int, fetcher Fetcher, 
+           out chan string, end chan bool) {
+
     if depth <= 0 {
+        end <- true
         return
     }
-    // fmt.Println("Crawl:", url)
+
+    // check current url been crawled
+    if _, ok := crawled[url]; ok {
+        out <- fmt.Sprintf("  -- ignore url: %s", url)
+        end <- true
+        return
+    }
+    // lock and modify status of current url
+    crawledMutex.Lock()
+    crawled[url] = true
+    crawledMutex.Unlock()
+
     body, urls, err := fetcher.Fetch(url)
     if err != nil {
-        fmt.Println(err)
+        out <- fmt.Sprintln(err)
+        end <- true
         return
     }
-    fmt.Printf("found url: %s \n\tbody: %q\n\n", url, body)
+
+    // normal return
+    out <- fmt.Sprintf("found url: %s. \tbody: %q\n", url, body)
+
+    // recursively crawl
+    subEnd := make(chan bool)
     for _, u := range urls {
-        Crawl(u, depth-1, fetcher)
+        go Crawl(u, depth-1, fetcher, out, subEnd)
     }
-    return
+
+    for i := 0; i < len(urls); i++ {
+        <- subEnd
+    }
+    end <- true
 }
 
+
+
+var crawled = make(map[string]bool)
+var crawledMutex sync.Mutex
+
+
 func main() {
-    Crawl("http://golang.org/", 4, fetcher)
+    out, end := make(chan string), make(chan bool)
+
+    // use pointer of fetcher to omit copy struct 
+    go Crawl("http://golang.org/", 4, &fetcher, out, end)
+    for {
+        select {
+        case result := <- out:
+            fmt.Println(result)
+        case <- end:
+            fmt.Println("case end true...")
+            return      // not break here.
+        }
+    }
 }
 
 
