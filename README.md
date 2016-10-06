@@ -20,3 +20,9 @@ by donavan and K
 
 2016-10-01
 
+## from blog infos
+
+read blogs from web: from_blog path.
+
+2016-10-06
+
