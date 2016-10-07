@@ -105,3 +105,40 @@ VDSO: http://lwn.net/Articles/446528/
 
 
 
+### 4 并发编程框架
+
+上面是通过OS的线程调度来达到单CPU下的并发。这个代码段或者叫任务，也是可以通过应用程序自己来调度和切换。
+
+因此可以通过一个调度程序，进行循环的选取任务进行调度。这里需要解决几个问题：
+
+* **调度**。schedule()程序本身在用户态，没有中断或系统调试来打断任务的执行。任务启动后，不会再回到schedule()。需要任务主动调用schedule()。即协作式调度。
+* **堆栈**。需要为每个任务分配堆栈，并保存在任务属性里，一般分配在堆空间上。这样没有任务总数的限制。
+* 等待IO。使用非阻塞方式。并让出CPU。
+* 任务同步。封装read, write函数，数据没有准备好则调用schecule()让出CPU。 
+
+goroutine是Go运行库的功能，而不是OS提供的功能。
+
+goroutine是一段代码，对应一个函数入口及堆上的堆栈。
+
+goroutine是协作式调度，需要调动调用Gosched()让出CPU。
+
+### 5 并发与并行——Rob Pike
+
+Concurrency is **dealing** lots of things at once.
+
+Parallelism is **doing** lost of things at once. Not the same, but related.
+
+one is about structure and one is about execution. 
+
+concurrency is not parallelism, although it enables parallelism.
+
+if you have only one processor, you program can still be concurrent but it cannot be parallel.
+
+on the other hand, a well-written concurrent program might run efficently in parallel on a multiprocessor. 
+
+基于事件驱动模型，可以解决单台机器的C10K问题。这只是并发，是基于事件模型，以最小的性能开销解决了大规模并发的问题。这也是某一时间**dealing**多少链接。不是doing**多少**链接。
+
+[doc](https://blog.golang.org/concurrency-is-not-parallelism)
+
+[slice](https://talks.golang.org/2012/waza.slide#1)
+
