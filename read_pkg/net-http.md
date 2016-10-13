@@ -532,3 +532,76 @@ curl localhost:8080/home/_go/src/
 </pre>
 ```
 
+
+
+**HandlerFunc, ServeHTTP**
+
+```go
+// The HandlerFunc type is an adapter to allow the use of
+// ordinary functions as HTTP handlers. If f is a function
+// with the appropriate signature, HandlerFunc(f) is a Handler that calls f.
+type HandlerFunc func(ResponseWriter, *Request)
+// 将一个函数f转换为一个Handler，并通过Handler来调用f。
+
+func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request)
+// ServeHTTP calls f(w, r).
+
+// HandlerFunc是一次函数转换，ServeHTTP是前者的一个方法。
+```
+
+
+
+### Header
+
+```go
+type Header map[string][]string
+// A Header represents the key-value pairs in an HTTP header.
+
+func (h Header) Add(key, value string)
+func (h Header) Del(key string)
+func (h Header) Get(key string) string
+// Get gets the first value associated with the given key. 
+// If there are no values associated with the key, Get returns "". 
+// To access multiple values of a key, 
+// access the map directly with CanonicalHeaderKey.
+
+func (h Header) Set(key, value string)
+// Set sets the header entries associated with key to the single element value. It replaces any existing values associated with key.
+
+func (h Header) Write(w io.Writer) error
+func (h Header) WriteSubset(w io.Writer, exclude map[string]bool) error
+
+```
+
+
+
+### Hijacker
+
+```go
+type Hijacker interface {
+  // Hijack lets the caller take over the connection.
+  // After a call to Hijack(), the HTTP server library
+  // will not do anything else with the connection.
+  // It becomes the caller's responsibility to manage
+  // and close the connection.
+  Hijack() (net.Conn, *bufio.ReadWriter, error)
+}
+```
+
+The Hijacker interface is implemented by **ResponseWriters** that allow an HTTP handler to take over the connection.
+
+example: 
+
+* net-http_hijack.go
+
+```shell
+# server
+go run net-http_hijack.go
+
+# client
+curl localhost:8080/hijack
+
+# test1: 1) client input xyz; 2) server CTRL-C, 3) see client output
+# test2: 1) client CTRL-C, 2) see server output
+```
+
