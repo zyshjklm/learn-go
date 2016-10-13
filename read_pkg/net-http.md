@@ -143,7 +143,8 @@ func CanonicalHeaderKey(s string) string
 func DetectContentType(data []byte) string
 // DetectContentType implements the algorithm described at 
 // http://mimesniff.spec.whatwg.org/ to determine the Content-Type of the given data. 
-// It considers at most the first 512 bytes of data. DetectContentType always returns a valid MIME type
+// It considers at most the first 512 bytes of data. 
+// DetectContentType always returns a valid MIME type
 
 ```
 
@@ -176,4 +177,243 @@ func ListenAndServe(addr string, handler Handler) error
 func ListenAndServeTLS(addr, certFile, keyFile string, handler Handler) error
 // ignore
 ```
+
+
+
+```go
+func MaxBytesReader(w ResponseWriter, r io.ReadCloser, n int64) io.ReadCloser
+// is intended for limiting the size of incoming request bodies.
+// prevents clients from accidentally or maliciously sending a large request and wasting server resources.
+
+func NotFound(w ResponseWriter, r *Request)
+// NotFound replies to the request with an HTTP 404 not found error.
+
+func ParseHTTPVersion(vers string) (major, minor int, ok bool)
+// parses a HTTP version string. "HTTP/1.0" returns (1, 0, true).
+
+func ParseTime(text string) (t time.Time, err error)
+// parses a time header (such as the Date: header), 
+// trying each of the three formats allowed by HTTP/1.1: 
+// TimeFormat, time.RFC850, and time.ANSIC.
+
+```
+
+
+
+about serve
+
+```go
+func Serve(l net.Listener, handler Handler) error
+// 1 Serve accepts incoming HTTP connections on the listener l, 
+// 2 creating a new service goroutine for each. 
+// 3 The service goroutines read requests and then call handler to reply to them. 
+// 4 Handler is typically nil, in which case the DefaultServeMux is used.
+
+func ServeContent(w ResponseWriter, req *Request, name string, 
+                  modtime time.Time, content io.ReadSeeker)
+// ServeContent replies to the request using the content in the provided ReadSeeker. 
+// The main benefit of ServeContent over io.Copy is that :
+// it handles Range requests properly, sets the MIME type, 
+// and handles If-Modified-Since requests.
+
+func ServeFile(w ResponseWriter, r *Request, name string)
+// replies to the request with the contents of the named file or directory.
+```
+
+
+
+### Client struct
+
+struct
+
+```go
+type Client struct {
+  Transport RoundTripper	
+  // specifies the mechanism by which individual HTTP request are made.
+  // if nil, DefaultTransport is used.
+  
+  CheckRedirect func(req *Request, via []*Request) error
+  // specifies the policy for handling redirects.
+  	// If CheckRedirect is nil, the Client uses its default policy,
+    // which is to stop after 10 consecutive requests.
+  
+  Jar CookieJar
+  // specifies the cookie jar.
+   	// If Jar is nil, cookies are not sent in requests and ignored in responses.
+  
+  Timeout time.Duration
+  // specifies a time limit for requests made by this Client. 
+  // the timeout includes connection time, any redirects, and 
+  // reading the response body.   
+  // The timer remains running after Get, Head, Post, or Do return 
+  // and will interrupt reading of the Response.Body.
+  // 
+  // A Timeout of zero means no timeout.
+```
+
+调用的接口。
+
+```go
+type RoundTripper interface {
+   RoundTrip(*Request) (*Response, error)
+   // RoundTrip executes a single HTTP transaction, 
+   // returning a Response for the provided Request.
+}
+```
+
+a Client is an HTPP client.  Its **zero value (DefaultClient)** is a usable client that uses DefaultTransport.
+
+The Client's Transport typically has internal state (cached TCP connections), so Clients should be **reused** instead of created as needed. Clients are safe for concurrent use by multiple goroutines.
+
+### method of Client
+
+```go
+func (c *Client) Do(req *Request) (*Response, error)
+// Do sends an HTTP request and returns an HTTP response, following policy (such as redirects, cookies, auth) as configured on the client.
+
+func (c *Client) Get(url string) (resp *Response, err error)
+// Get issues a GET to the specified URL. If the response is one of the  3xx redirect codes, Get follows the redirect after calling the Client's CheckRedirect function.
+// 
+// To make a request with custom headers, use NewRequest and Client.Do.
+
+func (c *Client) Head(url string) (resp *Response, err error)
+// issues a HEAD to the specified URL.  following redirect codes,
+
+func (c *Client) Post(url string, bodyType string, body io.Reader) (resp *Response, err error)
+// issues a POST to the specified URL.
+// Caller should close resp.Body when done reading from it.
+// To set custom headers, use NewRequest and Client.Do.
+
+func (c *Client) PostForm(url string, data url.Values) (resp *Response, err error)
+// issues a POST to the specified URL, with data's keys and values URL-encoded as the request body.
+```
+
+### CloserNotifier interface
+
+```go
+type CloseNotifier interface {
+    // CloseNotify returns a channel that receives at most a
+    // single value (true) when the client connection has gone away.
+    //
+    // CloseNotify may wait to notify until Request.Body has been
+    // fully read.
+    //
+    // After the Handler has returned, there is no guarantee
+    // that the channel receives a value.
+    CloseNotify() <-chan bool
+}
+```
+
+The CloseNotifier interface is implemented by **ResponseWriters** which allow detecting when the underlying connection has gone away.
+
+This mechanism can be used to cancel long operations on the server if the client has disconnected before the response is ready.
+
+### type connState
+
+```go
+type ConnState int
+// A ConnState represents the state of a client connection 
+// to a server. It's used by the optional Server.ConnState hook.
+
+const (
+	StateNew ConnState = iota
+  	// represents a new connection that is expected to send a request immediately.
+	// transition to either StateActive or StateClosed.
+
+  	StateActive
+  	// represents a connection that has read 1 or more bytes of a request. 
+  	// The Server.ConnState hook for StateActive fires 
+  	// before the request has entered a handler
+  	// After the request is handled, the state transitions to 
+  	// StateClosed, StateHijacked, or StateIdle.
+
+	StateIdle
+  	// represents a connection that has finished handling a request and 
+  	// is in the keep-alive state, waiting for a new request. 
+  	// Connections transition from StateIdle to either StateActive or StateClosed.
+
+  	StateHijacked
+	// represents a hijacked connection.
+    // This is a terminal state. It does not transition to StateClosed.
+        
+	StateClosed
+    // represents a closed connection. This is a terminal state. 
+  	// Hijacked connections do not transition to StateClosed.
+)
+```
+
+method of connState
+
+```go
+func (c ConnState) String() string
+```
+
+
+
+### Cookie 
+
+```go
+type Cookie struct {
+   Naming, Value string
+   MaxAge int
+   Secure, HttpOnly bool
+   Raw string
+   // ...
+}
+// A Cookie represents an HTTP cookie as sent in the Set-Cookie header
+// of an HTTP response or the Cookie header of an HTTP request.
+
+func (c *Cookie) String() string
+
+type CookieJar interface {
+	//handles the receipt of the cookies in a reply for the given URL.
+  	SetCookies(u *url.URL, cookies []*Cookie)
+  
+  	// returns the cookies to send in a request for the given URL.
+    Cookies(u *url.URL) []*Cookie
+}
+// A CookieJar manages storage and use of cookies in HTTP requests.
+
+```
+
+
+
+### Dir, File, FileSystem
+
+
+
+```go
+type Dir string
+// A Dir implements FileSystem using the native file system restricted to a specific directory tree.
+
+func (d Dir) Open(name string) (File, error)
+
+type File interface {
+    io.Closer
+    io.Reader
+    io.Seeker
+    Readdir(count int) ([]os.FileInfo, error)
+    Stat() (os.FileInfo, error)
+}
+// A File is returned by a FileSystem's Open method and 
+// can be served by the FileServer implementation.
+
+// The methods should behave the same as those on an *os.File.
+
+type FileSystem interface {
+    Open(name string) (File, error)
+}
+// A FileSystem implements access to a collection of named files. 
+// The elements in a file path are separated by slash ('/', U+002F) characters, 
+// regardless of host operating system convention.
+
+type Flusher interface {
+    // Flush sends any buffered data to the client.
+    Flush()
+}
+// The Flusher interface is implemented by ResponseWriters that 
+// allow an HTTP handler to flush buffered data to the client.
+```
+
+Note that even for ResponseWriters that support Flush, if the client is connected through an HTTP proxy, the buffered data may not reach the client until the response completes.
 
