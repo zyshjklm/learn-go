@@ -178,6 +178,10 @@ func ListenAndServeTLS(addr, certFile, keyFile string, handler Handler) error
 // ignore
 ```
 
+example of server: 
+
+* net-http_server.go
+
 
 
 ```go
@@ -416,4 +420,115 @@ type Flusher interface {
 ```
 
 Note that even for ResponseWriters that support Flush, if the client is connected through an HTTP proxy, the buffered data may not reach the client until the response completes.
+
+
+
+## Handler
+
+```go
+type Handler interface {
+    ServeHTTP(ResponseWriter, *Request)
+}
+```
+
+A Handler **responds** to an HTTP request.
+
+ServeHTTP should write **reply headers and data** to the ResponseWriter and then **return**. 
+
+Returning signals that the request is finished; it is not valid to use the ResponseWriter or read from the Request.Body after or concurrently with the completion of the ServeHTTP call. 
+
+译：当对ServeHTTP的调用结束时，再使用ResponseWriter或者从Request.Body读取内容则是非法的。
+
+it may not be possible to read from the **Request.Body** after writing to the ResponseWriter. Cautious handlers should read the Request.Body first, and then reply.
+
+Except for reading the body, handlers should not modify the provided Request.
+
+If ServeHTTP panics, the server (the caller of ServeHTTP) assumes that the effect of the panic was isolated to the active request. It recovers the panic, logs a stack trace to the server error log, and **hangs up**(挂断，搁置) the connection.
+
+**FileServer**
+
+```go
+func FileServer(root FileSystem) Handler
+// returns a handler that serves HTTP requests with 
+// the contents of the file system rooted at root.
+
+// To use the operating system's file system implementation, use http.Dir:
+http.Handle("/", http.FileServer(http.Dir("/tmp")))
+
+```
+
+example :
+
+* net-http_fileserver.go
+
+```shell
+# server
+go run net-http_fileserver.go
+
+# client
+curl localhost:8080
+<pre>
+<a href="bash/">bash/</a>
+<a href="cups/">cups/</a>
+<a href="groff/">groff/</a>
+<a href="ntp/">ntp/</a>
+<a href="postfix/">postfix/</a>
+</pre>
+```
+
+
+
+other func about handler
+
+```go
+func NotFoundHandler() Handler
+func RedirectHandler(url string, code int) Handler
+
+func StripPrefix(prefix string, h Handler) Handler
+// StripPrefix returns a handler that serves HTTP requests by removing the 
+// given prefix from the request URL's Path and invoking the handler h. 
+```
+
+example:
+
+* net-http_stripFileserver.go
+
+```shell
+# server 
+go run net-http_stripFileserver.go
+# route /home/* to /Users/user/*
+
+# client
+curl localhost:8080/
+# 404 page not found
+
+curl localhost:8080/home
+# <a href="/home/">Moved Permanently</a>.
+
+curl localhost:8080/home/
+<pre>
+<a href=".Trash/">.Trash/</a>
+<a href=".bash_history">.bash_history</a>
+...
+<a href=".vimrc">.vimrc</a>
+<a href="Applications/">Applications/</a>
+<a href="Desktop/">Desktop/</a>
+<a href="Documents/">Documents/</a>
+<a href="Downloads/">Downloads/</a>
+</pre>
+
+curl localhost:8080/home/
+<pre>
+
+curl localhost:8080/home/_go/src
+# return blank
+
+curl localhost:8080/home/_go/src/
+<pre>
+<a href="github.com/">github.com/</a>
+<a href="golang.org/">golang.org/</a>
+<a href="gopl.io/">gopl.io/</a>
+<a href="readme.md">readme.md</a>
+</pre>
+```
 
