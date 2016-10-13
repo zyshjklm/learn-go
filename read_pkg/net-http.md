@@ -605,3 +605,152 @@ curl localhost:8080/hijack
 # test2: 1) client CTRL-C, 2) see server output
 ```
 
+
+
+## type Request
+
+struct:
+
+A Request represents an HTTP **request** 
+
+* received by a server or 
+* to be sent by a client.
+
+
+
+```go
+type Request struct {
+    Method string
+
+    URL *url.URL
+
+    // The protocol version for incoming server requests.
+    Proto      string // "HTTP/1.0"
+    ProtoMajor int    // 1
+    ProtoMinor int    // 0
+
+    Header Header
+
+    Body io.ReadCloser
+
+    ContentLength int64
+
+    TransferEncoding []string
+    Close bool
+    Host string
+    Form url.Values
+    PostForm url.Values
+    MultipartForm *multipart.Form
+
+    Trailer Header
+
+    RemoteAddr string
+
+    RequestURI string
+    TLS *tls.ConnectionState
+
+    Cancel <-chan struct{}
+
+    // Response is the redirect response which caused this request
+    // to be created. This field is only populated during client
+    // redirects.
+    Response *Response
+    // contains filtered or unexported fields
+}
+```
+
+
+
+### func about Request
+
+```go
+func NewRequest(method, urlStr string, body io.Reader) (*Request, error)
+// returns a new Request given a method, URL, and optional body.
+
+func ReadRequest(b *bufio.Reader) (*Request, error)
+// ReadRequest reads and parses an incoming request from b.
+
+```
+
+### Method about Request
+
+```go
+func (r *Request) AddCookie(c *Cookie)
+func (r *Request) Cookie(name string) (*Cookie, error)
+func (r *Request) Cookies() []*Cookie
+//  parses and returns the HTTP cookies sent with the request.
+
+func (r *Request) BasicAuth() (username, password string, ok bool)
+// returns the username and password provided in the request's Authorization header
+
+func (r *Request) Context() context.Context
+
+func (r *Request) FormFile(key string) (multipart.File, *multipart.FileHeader, error)
+func (r *Request) FormValue(key string) string
+
+// ...
+
+func (r *Request) Write(w io.Writer) error
+
+```
+
+
+
+## Response
+
+```go
+type Response struct {
+    Status     string // e.g. "200 OK"
+    StatusCode int    // e.g. 200
+    Proto      string // e.g. "HTTP/1.0"
+    ProtoMajor int    // e.g. 1
+    ProtoMinor int    // e.g. 0
+
+  	Header Header
+  	Body io.ReadCloser
+  	ContentLength int64
+  	TransferEncoding []string
+  	//...
+}
+```
+
+### funcs
+
+```go
+func Get(url string) (resp *Response, err error)
+// issues a GET to the specified URL.
+// Get is a wrapper around DefaultClient.Get.
+
+func Head(url string) (resp *Response, err error)
+
+func Post(url string, bodyType string, body io.Reader) (resp *Response, err error)
+
+func PostForm(url string, data url.Values) (resp *Response, err error)
+
+func ReadResponse(r *bufio.Reader, req *Request) (*Response, error)
+
+```
+
+### methods
+
+```go
+func (r *Response) Cookies() []*Cookie
+
+func (r *Response) Location() (*url.URL, error)
+// returns the URL of the response's "Location" header
+
+func (r *Response) Write(w io.Writer) error
+// writes r to w in the HTTP/1.x server response format
+```
+
+
+
+## ResponseWriter interface
+
+```go
+type ResponseWriter interface {
+    Header() Header
+    Write([]byte) (int, error)
+    WriteHeader(int)
+```
+
