@@ -754,3 +754,93 @@ type ResponseWriter interface {
     WriteHeader(int)
 ```
 
+
+
+## ServeMux
+
+```go
+type ServeMux struct {
+        // contains filtered or unexported fields
+}
+
+// func
+func NewServeMux() *ServeMux
+```
+
+ServeMux is an HTTP request multiplexer. It matches the URL of each incoming request against a list of registered patterns and calls the handler for the pattern that most closely matches the URL.
+
+Longer patterns take precedence over shorter ones
+
+```go
+// method
+func (mux *ServeMux) Handler(r *Request) (h Handler, pattern string)
+// returns the handler to use for the given request
+
+func (mux *ServeMux) Handle(pattern string, handler Handler)
+// registers the handler for the given pattern. 
+// If a handler already exists for pattern, Handle panics.
+
+func (mux *ServeMux) HandleFunc(pattern string, 
+      handler func(ResponseWriter, *Request))
+// registers the handler function for the given pattern.
+
+func (mux *ServeMux) ServeHTTP(w ResponseWriter, r *Request)
+// dispatches the request to the handler whose pattern 
+// most closely matches the request URL.
+```
+
+
+
+## type Server
+
+```go
+type Server struct {
+  Addr         string        
+  // TCP address to listen on, ":http" if empty
+  Handler      Handler       
+  // handler to invoke, http.DefaultServeMux if nil
+  ReadTimeout  time.Duration 
+  // maximum duration before timing out read of the request
+  WriteTimeout time.Duration 
+  // maximum duration before timing out write of the response
+  TLSConfig    *tls.Config   
+  // optional TLS config, used by ListenAndServeTLS
+
+  MaxHeaderBytes int
+  TLSNextProto map[string]func(*Server, *tls.Conn, Handler)
+  ConnState func(net.Conn, ConnState)
+  ErrorLog *log.Logger
+}
+// A Server defines parameters for running an HTTP server.
+
+```
+
+methods:
+
+```go
+func (srv *Server) ListenAndServe() error
+// listens on the TCP network address srv.Addr and then 
+// calls Serve to handle requests on incoming connections.
+
+func (srv *Server) ListenAndServeTLS(certFile, keyFile string) error
+
+func (srv *Server) Serve(l net.Listener) error
+// accepts incoming connections on the Listener l, 
+// creating a new service goroutine for each. 
+// The service goroutines read requests and then 
+// call srv.Handler to reply to them.
+
+func (srv *Server) SetKeepAlivesEnabled(v bool)
+
+```
+
+
+
+## type Transport
+
+Transport is an implementation of RoundTripper that supports HTTP, HTTPS, and HTTP proxies (for either HTTP or HTTPS with CONNECT).
+
+```go
+// ingore
+```
+
