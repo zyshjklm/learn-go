@@ -98,6 +98,12 @@ type tcpKeepAliveListener struct {
 
 **tcpKeepAliveListener{  ln.(*net.TCPListener)  } —— 这是个什么表达式？**
 
+**更新**：
+
+interface.(xx_type)是用来判断xx_type的类型的。
+
+
+
 Listener接口变量ln转化为tcpKeepAliveListener类型的监听，赋值给tcpKeepAliveListener匿名变量，最终调用了Server结构的Serve方法。
 
 ### 1.3 Serve方法
@@ -394,4 +400,19 @@ func (sh serverHandler) ServeHTTP(rw ResponseWriter, req *Request) {
 使用Handle来安装Handler时，需要显式实现自己的ServeHTTP函数，最终由serverHandler获取自定义Handler，因为自己实现的ServeHTTP实现了Handler接口，从而调用到自定义的ServeHTTP接口函数。
 
 
+
+## 4 网上分析
+
+上面的分析过程，完全是自己独立进行的。后再又看了一上网上的分析，感觉自己有一小部分是没分析到，特别是Mux相关的部分，而且相邻的地方可能有错误。
+
+先把网上的链接保存下来，以后再详细理解 
+
+go语言原生http库分析
+
+* 1： http://blog.csdn.net/idwtwt/article/details/51816106
+* 2： http://blog.csdn.net/idwtwt/article/details/51817881
+
+http server源码阅读：
+
+* http://www.cnblogs.com/yjf512/archive/2012/08/22/2650873.html
 
