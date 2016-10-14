@@ -315,6 +315,83 @@ type HandlerFunc func(ResponseWriter, *Request)
 func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) {
         f(w, r)
 }
-
 ```
+
+
+
+## 2 HandleFunc 
+
+style 1: 
+
+```go
+// hello world, the web server
+func HelloServer(w http.ResponseWriter, req *http.Request) {
+    io.WriteString(w, "hello, world!\n")
+}
+
+func main() {
+    http.HandleFunc("/hello", HelloServer)
+    log.Fatal(http.ListenAndServe(":12345", nil))
+}
+```
+
+如之前分析。ListenAndServe最终会调用到
+
+```go
+func (f HandlerFunc) ServeHTTP(w ResponseWriter, r *Request) { f(w, r)}
+// 从而执行：
+HelloServer(f, r)
+```
+
+
+
+## 3 Handle
+
+style 2:
+
+```go
+package main
+
+import (
+    "log"
+    "fmt"
+    "net/http"
+)
+
+type String string
+
+func (str String) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+    fmt.Fprintf(w, "%s for URL.Path(%q)\n", str, r.URL.Path)
+}
+
+func main() {
+    str := String("I'm jungle!")
+    http.Handle("/string", str)
+    log.Fatal(http.ListenAndServe("localhost:8000", nil))
+}
+```
+
+example as read_pkg/web_server_handler.go
+
+对于String类型，其实现了ServeHTTP，则实现了Handler接口。这样，在1.4部分所说的serverHandler在执行自己的ServeHTTP方法时，最终会找到默认的handler，并执行其自己定义的ServeHTTP方法。
+
+```go
+func (sh serverHandler) ServeHTTP(rw ResponseWriter, req *Request) {
+    handler := sh.srv.Handler
+    if handler == nil {
+      	handler = DefaultServeMux
+    }
+    handler.ServeHTTP(rw, req)
+}
+```
+
+
+
+因此：
+
+使用HandleFunc时，显示的绑定处理函数xxxHandler(w, r)。然后通过HandlerFunc type的ServeHTTP来调用了xxxHandler(w, r)。
+
+使用Handle来安装Handler时，需要显式实现自己的ServeHTTP函数，最终由serverHandler获取自定义Handler，因为自己实现的ServeHTTP实现了Handler接口，从而调用到自定义的ServeHTTP接口函数。
+
+
 
