@@ -3,6 +3,13 @@ package main
 import "fmt"
 import "encoding/json"
 
+
+type FamilyMember struct {
+	Name string
+	Age int
+	Parents []string
+}
+
 func byte2json(b []byte) map[string]interface{} {
 	var f map[string]interface{}
 	err := json.Unmarshal(b, &f)
@@ -12,7 +19,7 @@ func byte2json(b []byte) map[string]interface{} {
 
 	fmt.Println("data struct:", f)
 	fmt.Println("\nformat style:")
-	
+
 	for k, v := range f {
 		switch vv := v.(type) {
 		case string:
@@ -40,5 +47,9 @@ func main() {
 
  	fmt.Println(b1)
  	fmt.Println(b2)
+
+ 	var m FamilyMember
+ 	json.Unmarshal(b1, &m)
+ 	fmt.Println(m)
 }
 

@@ -25,5 +25,9 @@ the default concrete type of Go:
 the json package use map[string] interface{} and []interface{}
 values to store arbitrary JSON object and arrays.
 
+for arbitrary decoding. json supports reference types.
+* pointer
+* slice
+* map
 
 
