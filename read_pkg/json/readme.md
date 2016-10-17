@@ -66,3 +66,22 @@ abd
 {}
 ```
 
+### 2 pkg/encoding/json
+
+read : https://golang.org/pkg/encoding/json/
+
+```go
+func Indent(dst *bytes.Buffer, src []byte, prefix, indent string) error
+
+// usage:
+var out bytes.Buffer
+json.Indent(&out, b, "=", "\t")
+out.WriteTo(os.Stdout)
+```
+
+Indent appends to dst an indented form of the JSON-encoded src. Each element in a JSON object or array begins on a new, indented line beginning with prefix followed by one or more copies of indent according to the indentation nesting.
+
+使用时需要使用bytes包中的bytes.Buffer类型。然后使用其WriteTo方法输出。
+
+
+
