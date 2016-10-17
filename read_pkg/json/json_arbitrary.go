@@ -47,9 +47,11 @@ func main() {
 
  	fmt.Println(b1)
  	fmt.Println(b2)
+ 	// map[Name:Wednesday Age:6 Parents:[Gomez Morticia]]
 
  	var m FamilyMember
  	json.Unmarshal(b1, &m)
  	fmt.Println(m)
+ 	// {Wednesday 6 [Gomez Morticia]}
 }
 
