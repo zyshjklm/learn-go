@@ -1,0 +1,27 @@
+## introduce
+
+to write Go well, it is important to understand its properties and idioms.
+
+This document gives tips for writing clear, idiomatic Go code.
+
+## example
+
+the Go package sources are intended to serve not only as the core library 
+but also as examples of how to use the language.
+
+many package contain working, self-contained executable examples 
+you can run directly from web site.
+
+## formatting
+
+Formatting issues are the most contentious but the least consequential.
+格式化问题是最有争议，却最少达成共识的问题。
+
+gofmt program (also avaliable as go fmt, which operate at the package level
+rather than source file level) read a Go program and emits the source in a 
+standard style of indentation and vertical alignment, retaining and if 
+necessary reformatting comments.
+
+example of formatEg1.go
+
+
