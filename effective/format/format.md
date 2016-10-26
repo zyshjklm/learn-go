@@ -24,4 +24,40 @@ necessary reformatting comments.
 
 example of formatEg1.go
 
+```shell
+
+cat formatEg1.go
+
+gofmt formatEg1.go > result.go
+# see the result.go
+
+# or
+go fmt formatEg1.go
+# will update the formatEg1.go file as result.go
+```
+
+about gofmt, you can try as below:
+
+```shell
+
+# show diffs
+gofmt -d formatEg1.go
+
+gofmt -w  formatEg1.go
+# instead of :
+#   gofmt formatEg1.go > result.go
+#   mv result formatEg1.go
+
+gofmt -h
+
+```
+
+formatting details remain:
+
+* use tab for indentation 
+* has no line length limit. wrap long line and indent with an extra tab.
+* needs fewer parentheses.
+  * if, for, switch do not have parentheses
+  * operator precedence hierarchy is shorter and cleaner, 
+    * like: x<<8 + y<<16, means what the spacing implies
 
