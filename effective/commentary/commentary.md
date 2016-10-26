@@ -36,7 +36,7 @@ func FormatBool(b bool) string {
         return "false"
 }
 
-```shell
+​```shell
 
 godoc strconv | grep FormatBool
 #     FormatBool, FormatFloat, FormatInt, and FormatUint convert values to
@@ -47,4 +47,92 @@ godoc strconv | grep FormatBool
 ```
 
 the syntax of declaration allows grouping of declarations.
+
+
+### my works of compare docs and source code
+
+* source code: github.com/go/src/strconv/
+* docs: http://localhost:6060/pkg/github.com/go/src/strconv/
+
+in docs, there are Overview, Index and Examples.
+
+1. Overview, comes from doc.go file. 
+
+2. Index extract from all source code files.
+
+**const**
+
+source code: 
+
+```go
+const intSize = 32 << (^uint(0) >> 63)
+
+// IntSize is the size in bits of an int or uint value.
+const IntSize = intSize
+```
+
+comments:
+
+```go
+const IntSize = intSize
+IntSize is the size in bits of an int or uint value.
+```
+
+**Variables**
+
+variables like const.
+
+**Function**
+
+source code:
+
+```go
+// AppendBool appends "true" or "false", according to the value of b,
+// to dst and returns the extended buffer.
+func AppendBool(dst []byte, b bool) []byte {
+        if b {
+                return append(dst, "true"...)
+        }
+        return append(dst, "false"...)
+}
+```
+
+comments:
+
+```go
+func AppendBool(dst []byte, b bool) []byte
+
+AppendBool appends "true" or "false", according to the value of b, to dst and returns the extended buffer.
+```
+
+**example**
+
+source code :  from **example_test.go**
+
+```go
+func ExampleAppendBool() {
+        b := []byte("bool:")
+        b = strconv.AppendBool(b, true)
+        fmt.Println(string(b))
+
+        // Output:
+        // bool:true
+}
+```
+
+comments example:
+
+Code:
+
+```
+b := []byte("bool:")
+b = strconv.AppendBool(b, true)
+fmt.Println(string(b))
+```
+
+Output:
+
+```
+bool:true
+```
 
