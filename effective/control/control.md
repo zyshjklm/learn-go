@@ -105,3 +105,91 @@ example: for_string.go
 
 Finally, Go has no comma operator and ++ and — are statement not expressions.
 
+### 4 switch
+
+The expressions need not be constants or even integers, the cases are evaluated top to bottom until a match is found.
+```go
+func unhex(c byte) byte {
+  	switch {
+    case '0' <= c && c <= '9':
+    	return c - '0'
+    case 'a' <= c && c <= 'f':
+      	return c - 'a' + 10
+    case 'A' <= c && c <= 'F':
+      	return c - 'A' + 10
+  	}
+  	return 0
+}
+```
+
+There is no automatic fall through, but cases can be presented in comma-separated lists.
+
+```go
+func shouldEscape(c byte) bool {
+  	switch c {
+    case ' ', '?', '&', '=', '+', '%':
+      	return true
+  	}
+  	return false
+}
+```
+
+
+
+#### 4.1 switch and break
+
+`break` statements can be used to terminate a switch early.
+
+```go
+Loop:
+	for n := 0; n < len(src); n += size {
+		switch {
+		case src[n] < sizeOne:
+			if validateOnly {
+				break	// terminate switch
+			}
+			size = 1
+			update(src[n])
+
+		case src[n] < sizeTwo:
+			if n+1 >= len(src) {
+				err = errShortInput
+				break Loop	// terminate Loop 
+			}
+			if validateOnly {
+				break	// terminate switch
+			}
+			size = 2
+			update(src[n] + src[n+1]<<shift)
+		}
+	}
+```
+
+a example of switch: compare.go
+
+#### 4.2 type switch
+
+A switch can also be used to discover the dynamic type of an interface variable.
+
+```go
+var t interface{}
+t = funcOfSomeType()
+
+switch t := t.(type) {	
+  // declaring a new var t with the same name of outside 
+  // but a different type in each case.
+default: 
+  	fmt.Printf("unexpected type %T\n", t)	// %T print whatever type t has
+case bool:
+  	fmt.Printf("boolean %t\n", t)
+case int:
+  	fmt.Printf("int %t\n", t)
+case *bool:
+  	fmt.Printf("pointer of boolean %t\n", *t)
+case *int:
+  	fmt.Printf("pointer of int %t\n", *t)
+}
+```
+
+details in example: switchType.go
+
