@@ -57,3 +57,35 @@ Type: 3, Data: meta
 ...
 
 ```
+
+#### wait and retries
+
+```shell
+
+2016/12/11 17:59:08 Head url http://golang.org
+2016/12/11 17:59:15 server not responding (Head http://golang.org: dial tcp 216.239.37.1:80: i/o timeout); retrying...
+2016/12/11 17:59:16 Head url http://golang.org
+2016/12/11 17:59:18 server not responding (Head http://golang.org: dial tcp 216.239.37.1:80: i/o timeout); retrying...
+2016/12/11 17:59:20 Head url http://golang.org
+2016/12/11 17:59:22 server not responding (Head http://golang.org: dial tcp 216.239.37.1:80: i/o timeout); retrying...
+2016/12/11 17:59:26 Head url http://golang.org
+2016/12/11 17:59:28 server not responding (Head http://golang.org: dial tcp 216.239.37.1:80: i/o timeout); retrying...
+2016/12/11 17:59:36 Head url http://golang.org
+2016/12/11 17:59:38 server not responding (Head http://golang.org: dial tcp 216.239.37.1:80: i/o timeout); retrying...
+2016/12/11 17:59:54 Head url http://golang.org
+2016/12/11 17:59:57 server not responding (Head http://golang.org: dial tcp 216.239.37.1:80: i/o timeout); retrying...
+Site is down: server http://golang.org failed to respond after 1m0s
+exit status 1
+
+```
+
+每一次Head url的时间比前一行的时间差是指数增加的：
+* 0: 08-08
+* 1: 16-15
+* 2: 20-18
+* 4: 26-22
+* 8: 36-28
+* 16: 54-38
+* 32:
+
+
