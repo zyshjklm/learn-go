@@ -89,3 +89,33 @@ exit status 1
 * 32:
 
 
+修改前缀
+```shell
+
+go run wait/main.go http://golang.org
+[wait] 2016/12/11 18:21:10 Head url http://golang.org
+[wait] 2016/12/11 18:21:17 server not responding (Head http://golang.org: dial tcp 216.239.37.1:80: i/o timeout); retrying...
+[wait] 2016/12/11 18:21:18 Head url http://golang.org
+[wait] 2016/12/11 18:21:20 server not responding (Head http://golang.org: dial tcp 216.239.37.1:80: i/o timeout); retrying...
+[wait] 2016/12/11 18:21:22 Head url http://golang.org
+[wait] 2016/12/11 18:21:24 server not responding (Head http://golang.org: dial tcp 216.239.37.1:80: i/o timeout); retrying...
+[wait] 2016/12/11 18:21:28 Head url http://golang.org
+[wait] 2016/12/11 18:21:30 server not responding (Head http://golang.org: dial tcp 216.239.37.1:80: i/o timeout); retrying...
+[wait] 2016/12/11 18:21:38 Head url http://golang.org
+[wait] 2016/12/11 18:21:41 server not responding (Head http://golang.org: dial tcp 216.239.37.1:80: i/o timeout); retrying...
+[wait] 2016/12/11 18:21:57 Head url http://golang.org
+[wait] 2016/12/11 18:22:00 server not responding (Head http://golang.org: dial tcp 216.239.37.1:80: i/o timeout); retrying...
+2016/12/11 18:22:32 Site is down: server http://golang.org failed to respond after 1m0s
+exit status 1
+
+```
+
+#### 错误处理的5种策略
+
+* 向上层传递。直接传递或者增加前缀
+* 做有意思的重试，常用指数回退法控制重试的时间
+* 打印错误并优雅退出
+* 打印错误并继续执行
+* 忽略错误，仅某些特殊情况下使用。比如删除某个日志文件
+
+

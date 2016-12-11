@@ -16,6 +16,8 @@ func WaitForServer(url string) error {
 	const timeout = 1 * time.Minute
 	deadline := time.Now().Add(timeout)
 
+	log.SetPrefix("[wait] ")
+	//log.SetFlags(0)
 	for tries := 0; time.Now().Before(deadline); tries++ {
 		log.Printf("Head url %s", url)
 		_, err := http.Head(url)
@@ -26,6 +28,7 @@ func WaitForServer(url string) error {
 		// exponential back-off.
 		time.Sleep(time.Second << uint(tries))
 	}
+	log.SetPrefix("")
 	return fmt.Errorf("server %s failed to respond after %s", url, timeout)
 }
 
@@ -36,7 +39,7 @@ func main() {
 	}
 	url := os.Args[1]
 	if err := WaitForServer(url); err != nil {
-		fmt.Fprintf(os.Stderr, "Site is down: %v\n", err)
+		log.Fatalf("Site is down: %v\n", err)
 		os.Exit(1)
 	}
 }
