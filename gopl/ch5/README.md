@@ -36,3 +36,24 @@ go build findlinks1/main.go
 cat go.html | ./main
 
 ```
+
+print all the node type and data
+
+```shell
+
+go build findlinks/main.go
+
+cat go.html | ./main
+Type: 2, Data:
+Type: 5, Data: html
+Type: 3, Data: html
+Type: 3, Data: head
+Type: 1, Data:
+Type: 3, Data: meta
+Type: 1, Data:
+Type: 3, Data: meta
+Type: 1, Data:
+Type: 3, Data: meta
+...
+
+```
