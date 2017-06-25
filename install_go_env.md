@@ -9,13 +9,13 @@ http://www.golangtc.com/download
 
 ```bash
 
-mkdir $HOME/_go/{bin,src,pkg}
+mkdir $HOME/jungleGo/{bin,src,pkg}
 
 # for iTerm2 and  Zsh
 vi ~/.zshrc
 # add below
 
-export GOPATH=$HOME/_go
+export GOPATH=$HOME/jungleGo
 export PATH=$PATH:$GOPATH/bin:/usr/local/go/bin
 
 
@@ -27,7 +27,7 @@ go env
 
 ```shell
 #
-# GOPATH="/Users/song/_go"
+# GOPATH="/Users/song/jungleGo"
 # GORACE=""
 # GOROOT="/usr/local/go"
 # 
