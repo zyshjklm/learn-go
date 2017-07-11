@@ -7,6 +7,7 @@ import (
 	"os"
 
 	cls "./class"
+	clses "./classes"
 	stu "./student"
 )
 
@@ -53,4 +54,27 @@ func main() {
 	fmt.Printf("\n-- new stu:\n")
 	c2.Print()
 	fmt.Println("\n----- end of class -----")
+
+	// classes
+	fmt.Println("\n----- start of classes -----")
+	var clsGrp1, clsGrp2 clses.Classes
+	clsGrp1.Create("miao")
+	clsGrp1.Add("jiang", 1)
+	clsGrp1.Add("jungle", 2)
+	clsGrp1.Create("zoo")
+	clsGrp1.Add("golang", 3)
+	clsGrp1.Add("python", 4)
+
+	clsGrp1.Print()
+
+	gbuf, err := json.Marshal(clsGrp1)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("\n-- start ori gbuf, marshal :\n")
+	os.Stdout.Write(gbuf)
+
+	fmt.Printf("\n\n-- after ori gbuf, unmarshal:\n")
+	json.Unmarshal(gbuf, &clsGrp2)
+	clsGrp2.Print()
 }
