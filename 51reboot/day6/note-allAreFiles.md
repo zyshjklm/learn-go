@@ -124,13 +124,61 @@ find interface -type f | xargs md5
     // 解压：src.tar.gz -> gzip.NewReader()  -> tar.NewReader() -> src (*os.File)
 
     // 压缩：src1 src2. -> tar.NewReader()  -> gzip.NewReader() -> fd.tar.gz (*os.File)
-
 ```
 
 ### 装饰器对象
 
 MyReader()
 
-函数不能记录状态，只能使用全局变量。
+函数不能记录状态，只能使用全局变量。而使用装饰器对象，则可以记录。
 
+比如实现一个自己的Reader，对读过的字节计数。
+
+#### 1）myReader-base.go
+
+```shell
+### prepare for test
+cp zcat.go test-zcat.go
+md5 zcat.go test-zcat.go
+#MD5 (zcat.go) = 529eae23d8b3662e8bddb75a0a5583e6
+#MD5 (test-zcat.go) = 529eae23d8b3662e8bddb75a0a5583e6
+tar -czf kkk.tar.gz test-zcat.go
+ls -l kkk.tar.gz
+#-rw-r--r--  1 song  staff  297 Jul 16 14:28 kkk.tar.gz
+gzip -l kkk.tar.gz
+#  compressed uncompressed  ratio uncompressed_name
+#         297        10240  97.1% kkk.tar
+file kkk.tar.gz
+#kkk.tar.gz: gzip compressed data, last modified: Sun Jul 16 06:28:53 2017, from Unix
+rm test-zcat.go
+
+go run myReader-base.go < kkk.tar.gz
+#test-zcat.go000644 000765 000024 00000000323 13132603617 013434 0ustar00songstaff000000 000000 package main
+# ...
+# copied num: 10240; rd size: 10240
+```
+
+如上可见，zcat.go --> test-zcat.go -> kkk.tar -> kkk.tar.gz
+
+其中从gzip命令可以看到kkk.tar的原始大小是10240字节。这和myReader-base.go的结果相同。这个脚本是直接读的gzip解压后的包。没有处理包关。
+
+该文件中，Reader的功能和被注释掉的一行// io.Copy(os.Stdout, uncompress)，除了统计外，基本功能是一样的。
+
+#### 2）myReader-adv.go
+
+```shell
+go run myReader-adv.go < kkk.tar.gz
+# ...
+
+# copied num: 211; rd size: 211
+
+ls -l test-zcat.go
+-rw-r--r--  1 song  staff  211 Jul 16 15:53 test-zcat.go
+
+md5 zcat.go test-zcat.go
+MD5 (zcat.go) = 529eae23d8b3662e8bddb75a0a5583e6
+MD5 (test-zcat.go) = 529eae23d8b3662e8bddb75a0a5583e6
+```
+
+第一个文件是直接将tar的Reader给了自定义Reader，而第二个则是先处理了tar的包头，即先tar.Next()之后，剩下的才是包体。从而计数读到的大小和文件大小相同。
 
