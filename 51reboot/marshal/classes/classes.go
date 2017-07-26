@@ -65,6 +65,13 @@ func (clses Classes) MarshalJSON() ([]byte, error) {
 	fmt.Println("clses ma-json:", reflect.TypeOf(clses))
 	// allClasses   map[string]*cls.Class `json:"classes"`
 	// curClassName string                `json:"current`
+	tmpStruct := make(map[string]interface{})
+	tmpStruct["AllClasses"] = clses.allClasses
+	tmpStruct["CurClassName"] = clses.curClassName
+	return json.Marshal(tmpStruct)
+	// 上面的办法看上去更优雅。但即不方便定义序列化时显示的key。
+	// 下面的方法，可以统一定义一个临时结构，供MarshalJSON和UnmarshalJSON，
+	// 这样就不会显得太冗余。
 
 	return json.Marshal(struct {
 		AllClasses   map[string]*cls.Class `json:"classes`

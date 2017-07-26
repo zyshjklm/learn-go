@@ -14,8 +14,13 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Println("scheme:", u.Scheme)
+	// Host include Hostname and Port()
 	fmt.Println("Host:", u.Host)
-	fmt.Println("Hostname:", u.Hostname)
+	fmt.Println("Hostname:", u.Hostname())
+	if len(u.Port()) != 0 {
+		fmt.Printf("port:%s\n", u.Port())
+	}
+
 	fmt.Println("path:", u.Path)
 	fmt.Println("queryString:", u.RawQuery)
 	fmt.Println("user:", u.User)
