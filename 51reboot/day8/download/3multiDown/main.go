@@ -12,6 +12,7 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -48,7 +49,6 @@ func fetchOrigin(url string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	// close resp
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		return nil, errors.New(resp.Status)
@@ -66,30 +66,54 @@ func fetchOrigin(url string) ([]string, error) {
 	return cleanLinks(url, urls)
 }
 
-func downloadImgs(urls []string, tmpDir string, conNum int) error {
+// capsulate the waitgroup, concurrent pool and routine.
+func downloadImgs(urls []string, dir string, conNum int) error {
+	if conNum <= 0 {
+		conNum = 1
+	}
+	var wg sync.WaitGroup
+	wg.Add(conNum)
+	urlChan := make(chan string)
+	for i := 1; i <= conNum; i++ {
+		go downWorker(urlChan, dir, &wg)
+	}
 	for _, url := range urls {
-		resp, err := http.Get(url)
-		if err != nil {
-			return err
-		}
-		// close resp
-		defer resp.Body.Close()
-		if resp.StatusCode != http.StatusOK {
-			return errors.New(resp.Status)
-		}
-		name := path.Base(url)
-		fullName := filepath.Join(tmpDir, name)
-		fmt.Println("dest:", fullName)
-		fd, err := os.Create(fullName)
-		if err != nil {
-			return err
-		}
-		defer fd.Close()
-		_, err = io.Copy(fd, resp.Body)
+		urlChan <- url
+	}
+	close(urlChan)
+	wg.Wait()
+	return nil
+}
+
+// read from channel and call downloadURL()
+func downWorker(urlChan chan string, dir string, wg *sync.WaitGroup) {
+	for url := range urlChan {
+		err := downloadURL(url, dir)
 		if err != nil {
 			log.Println(err)
 		}
 	}
+	wg.Done()
+}
+
+func downloadURL(url, dir string) error {
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	// close resp
+	defer resp.Body.Close()
+	fullName := filepath.Join(dir, path.Base(url))
+	fd, err := os.Create(fullName)
+	if err != nil {
+		return err
+	}
+	defer fd.Close()
+	_, err = io.Copy(fd, resp.Body)
+	if err != nil {
+		return err
+	}
+	log.Println("down:", fullName)
 	return nil
 }
 
