@@ -1,6 +1,8 @@
 package main
 
 import (
+	"archive/tar"
+	"compress/gzip"
 	"errors"
 	"fmt"
 	"io"
@@ -117,6 +119,40 @@ func downloadURL(url, dir string) error {
 	return nil
 }
 
+func makeTar(dir, tarName string) error {
+	fd, err := os.Create(tarName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer fd.Close()
+	fmt.Println("start make tar...:", dir)
+	baseDir := filepath.Base(dir)
+
+	compress := gzip.NewWriter(fd)
+	tr := tar.NewWriter(compress)
+	defer compress.Close()
+	defer tr.Close()
+
+	filepath.Walk(dir, func(name string, info os.FileInfo, err error) error {
+		header, err := tar.FileInfoHeader(info, "")
+		if err != nil {
+			return err
+		}
+		relName, _ := filepath.Rel(dir, name)
+		// fmt.Printf("\n - name:%s, p:%s\n", name, relName)
+		header.Name = filepath.Join(baseDir, relName)
+		tr.WriteHeader(header)
+		fd, err := os.Open(name)
+		if err != nil {
+			return err
+		}
+		defer fd.Close()
+		io.Copy(tr, fd)
+		return nil
+	})
+	return nil
+}
+
 func main() {
 	if len(os.Args) != 2 {
 		fmt.Printf("usage: %s url", os.Args[0])
@@ -140,4 +176,7 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
+
+	dstName := filepath.Base(url) + ".tar.gz"
+	makeTar(tmpDir, dstName)
 }
