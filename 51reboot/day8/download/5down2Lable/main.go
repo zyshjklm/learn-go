@@ -4,6 +4,7 @@ import (
 	"archive/tar"
 	"compress/gzip"
 	"errors"
+	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -18,6 +19,19 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 )
+
+var (
+	web   = flag.String("w", "", "url to download")
+	label = flag.String("l", "img", "label to download")
+	dest  = flag.String("d", "img.tar.gz", "dest file to save")
+	num   = flag.Int("n", 5, "routine numbers")
+)
+
+var labelAttrMap = map[string]string{
+	"img":    "src",
+	"script": "src",
+	"a":      "href",
+}
 
 func repairLink(uri *url.URL, url string) string {
 	switch {
@@ -45,9 +59,9 @@ func cleanLinks(oriURL string, links []string) ([]string, error) {
 	return result, nil
 }
 
-func fetchOrigin(url string) ([]string, error) {
+func fetchOrigin(web, label string) ([]string, error) {
 	var urls []string
-	resp, err := http.Get(url)
+	resp, err := http.Get(web)
 	if err != nil {
 		return nil, err
 	}
@@ -59,13 +73,13 @@ func fetchOrigin(url string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	doc.Find("img").Each(func(i int, s *goquery.Selection) {
-		link, ok := s.Attr("src")
+	doc.Find(label).Each(func(i int, s *goquery.Selection) {
+		link, ok := s.Attr(labelAttrMap[label])
 		if ok {
 			urls = append(urls, link)
 		}
 	})
-	return cleanLinks(url, urls)
+	return cleanLinks(web, urls)
 }
 
 // capsulate the waitgroup, concurrent pool and routine.
@@ -154,29 +168,25 @@ func makeTar(dir, tarName string) error {
 }
 
 func main() {
-	if len(os.Args) != 2 {
-		fmt.Printf("usage: %s url", os.Args[0])
-		os.Exit(1)
-	}
-	url := os.Args[1]
+	flag.Parse()
+	// web, label, dest, num
 	// "http://59.110.12.72:7070/golang-spider/img.html"
-	links, err := fetchOrigin(url)
+	links, err := fetchOrigin(*web, *label)
 	if err != nil {
 		fmt.Println(err)
 	}
 	for i, url := range links {
 		fmt.Println(i, url)
 	}
+
 	tmpDir, err := ioutil.TempDir("", "spider")
 	if err != nil {
 		log.Fatal(err)
 	}
-	// defer os.RemoveAll(tmpDir)
-	err = downloadImgs(links, tmpDir, 5)
+	defer os.RemoveAll(tmpDir)
+	err = downloadImgs(links, tmpDir, *num)
 	if err != nil {
 		log.Panic(err)
 	}
-
-	dstName := filepath.Base(url) + ".tar.gz"
-	makeTar(tmpDir, dstName)
+	makeTar(tmpDir, *dest)
 }
