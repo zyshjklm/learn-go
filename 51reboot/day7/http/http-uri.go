@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"path/filepath"
 	"log"
 	"net/url"
 	"os"
@@ -25,6 +26,11 @@ func main() {
 	fmt.Println("queryString:", u.RawQuery)
 	fmt.Println("user:", u.User)
 	fmt.Println("xx", u.Fragment)
+
+	// 
+	fmt.Println("dir :", filepath.Dir(u.Path))
+	fmt.Println("base:", filepath.Base(u.Path))
+	fmt.Println("name:", filepath.Base(filepath.Base(u.Path)))
 }
 
 /*
