@@ -24,3 +24,28 @@ go run account-sync-chan.go
 
 ```
 
+wait
+
+```shell
+
+go run account-wait.go
+5
+go run account-wait.go
+4
+# 使用waitGroup来代替channel.
+# 协程封装消费方法，以及waitGroup
+
+
+# waitGroup与channel的差别在于后者可以设置超时。
+# 而不用一直等等结束。
+
+# 启动相应的协程，通过channel返回结果。
+# 主协程使用select来选择channel的返回值,
+# 以及定时器的到达，任意case满足则结束等待。
+go run account-timeout.go
+5
+go run account-timeout.go
+4
+
+```
+
