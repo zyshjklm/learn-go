@@ -12,9 +12,12 @@ func server(listener net.Listener) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		time.Sleep(1000 * time.Millisecond)
-		conn.Write([]byte(time.Now().String() + ": hello golang\n"))
-		conn.Close()
+		// 哪里阻塞go哪里
+		go func() {
+			time.Sleep(1000 * time.Millisecond)
+			conn.Write([]byte(time.Now().String() + ": hello golang\n"))
+			conn.Close()
+		}()
 	}
 }
 
