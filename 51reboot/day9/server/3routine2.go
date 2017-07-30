@@ -12,7 +12,7 @@ func server(listener net.Listener) {
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		connCh <- conn
 	}

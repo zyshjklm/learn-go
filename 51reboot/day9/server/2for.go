@@ -10,7 +10,7 @@ func server(listener net.Listener) {
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		time.Sleep(1000 * time.Millisecond)
 		conn.Write([]byte(time.Now().String() + ": hello golang\n"))

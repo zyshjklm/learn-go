@@ -10,7 +10,7 @@ func server(listener net.Listener) {
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 		// 哪里阻塞go哪里
 		go func() {
