@@ -7,7 +7,6 @@ import (
 	"time"
 )
 
-//
 func printURLStatus(url string) {
 	resp, err := http.Get(url)
 	if err != nil {

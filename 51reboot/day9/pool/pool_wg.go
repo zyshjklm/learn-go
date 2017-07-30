@@ -30,7 +30,6 @@ func work(ch chan string, wg *sync.WaitGroup) {
 func main() {
 	var ch = make(chan string)
 	var wg sync.WaitGroup
-	// 	wg内部是计数器，Add加数，Done减数。Wait在大于0时阻塞。
 
 	urls := []string{
 		"http://www.baidu.com",
@@ -38,9 +37,6 @@ func main() {
 		"http://qq.com"}
 	urlNum := len(urls)
 
-	// wg.Add(urlNum)
-	// Add应该在启动协程前启动。
-	// 添加wg的2种方式。上面在循环中，每次加1. 下面是一次完成。
 	for i := 0; i < urlNum; i++ {
 		wg.Add(1)
 		go work(ch, &wg)
@@ -50,5 +46,8 @@ func main() {
 		ch <- urls[i]
 	}
 	close(ch)
+
+	// 启动不要用Sleep来进行协程的同步。一定会出问题。前面只是演示
+	// time.Sleep(2 * time.Second)
 	wg.Wait()
 }
