@@ -237,3 +237,37 @@ hello
 hello golang
 ```
 
+
+
+## about read from bufio
+
+执行结果：
+
+```shell
+# go run readBuf.go
+2017/07/30 21:53:52 current offset:0
+2017/07/30 21:53:52 current offset:16
+#hello
+#
+ng
+2017/07/30 22:02:51 current offset:19; num:3
+--- test fd2 ---
+2017/07/30 21:53:52 current offset:0
+2017/07/30 21:53:52 current offset:16
+#hello
+#
+hello golang
+2017/07/30 22:02:51 current offset:19; num:13
+```
+
+从上可以看出：
+
+* bufio的ReadString('\n')方法：
+  * 语句：`line1, _ := r1.ReadString('\n')`  
+  * 先读取了一行，将结果传递给line变量
+  * 同时还继续读取直到填满了Reader的缓冲区（此处为10Byte）
+  * 因此该语句之后fd的偏移为16。
+* 因为上述特性，故：
+  * 从fd继续读时，只能读到'ng\n' 3个字符；
+  * 从bufio变量中继续读，则能包括已经读入buf中的10个字节，共13字节
+
