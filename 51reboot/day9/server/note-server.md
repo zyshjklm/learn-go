@@ -103,3 +103,50 @@ go func() {
 
 2个请求在1秒后同时返回。从打印的日志中可以看到处理时的时间点，版本2是间隔1秒，而本次的时间即在同一秒内。
 
+
+
+#### ver 3.2 for and routine, and channel
+
+在ver3.1基础上，将server中阻塞的部分则匿名协程独立成函数worker，再使用协程。
+
+* server启动一个协程后，只管接收请求，并将请求写入channel。
+* worker从channel中读取连接，并进行处理。
+
+执行效果：
+
+```shell
+# go run 3routine2.go &
+
+# nc localhost 8021 & nc localhost 8021
+[1] 68495
+2017-07-30 20:06:42.477293737 +0800 CST: hello golang
+[1]  + 68495 done       nc localhost 8021
+2017-07-30 20:06:43.48029226 +0800 CST: hello golang
+```
+
+由于server中只有一个协程。所有多个请求到达时，在协程内部还是串行处理的。从日志的时间上也能看到相关1秒。
+
+#### ver 3.3 for and routine
+
+在ver3.2基础上:
+
+* 将server中启动一个协程，改为每收到一个请求时启动一个协程。
+
+- 不再使用通道，而是直接传递连接。
+
+执行效果：
+
+```shell
+# go run 3routine3.go &
+
+# nc localhost 8021 & nc localhost 8021
+[1] 69107
+2017-07-30 20:16:07.421593995 +0800 CST: hello golang
+2017-07-30 20:16:07.42162057 +0800 CST: hello golang
+[1]  + 69107 done       nc localhost 8021
+```
+
+这个版本达到了并发的需求，不过每次生成一个新的协程，处理完一个请求又销毁了。代价有些大。
+
+比较好的方式是在3routine2.go的基础上，server中启动多个协程作为一个池子。这样即使只使用一个channel，也能较好的达到并发。
+
