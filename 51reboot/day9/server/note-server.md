@@ -150,3 +150,33 @@ go func() {
 
 比较好的方式是在3routine2.go的基础上，server中启动多个协程作为一个池子。这样即使只使用一个channel，也能较好的达到并发。
 
+
+
+#### ver 4 resp html
+
+基于3routine2.go，将返回的内容由字符串改为一个html。
+
+执行效果：
+
+```shell
+# go run 4html.go &
+
+# nc localhost 8021
+HTTP/1.1 200 OK
+Date: Sat, 29 Jul 2017 06:18:23 GMT
+Content-Type: text/html
+Connection: Keep-Alive
+Server: BWS/1.1
+X-UA-Compatible: IE=Edge,chrome=1
+BDPAGETYPE: 3
+Set-Cookie: BDSVRTM=0; path=/
+
+<html>
+<body>
+<h1 style="color:red">hello golang</h1>
+</body>
+</html>
+```
+
+另可以在浏览器中访问127.0.0.1:8021观察网页结果。
+
