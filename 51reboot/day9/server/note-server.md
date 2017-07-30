@@ -180,3 +180,60 @@ Set-Cookie: BDSVRTM=0; path=/
 
 另可以在浏览器中访问127.0.0.1:8021观察网页结果。
 
+#### ver 5  get file by http
+
+基于3routine2.go，从client端获取一个文件名，然后打开文件，将内容反馈给client。
+
+执行效果：
+
+server端：
+
+```shell
+#  cat a.txt
+hello
+hello golang
+
+# go run 5file.go
+2017/07/30 21:01:45 get file:  a.txt
+2017/07/30 21:01:45 get file:  a.txt
+2017/07/30 21:01:46 2017-07-30 21:01:46.94368588 +0800 CST
+2017/07/30 21:01:46 2017-07-30 21:01:46.943732712 +0800 CST
+```
+
+Client:
+
+```shell
+# echo 'GET a.txt' | nc localhost 8021 &echo 'GET a.txt' | nc localhost 8021
+[1] 75762 75763
+hello
+hello golang
+hello
+hello golang
+[1]  + 75762 done       echo 'GET a.txt' |
+       75763 done       nc localhost 8021
+
+# echo 'GET a.txt' | nc localhost 8021
+hello
+hello golang
+
+# telnet localhost 8021
+Trying ::1...
+Connected to localhost.
+Escape character is '^]'.
+GET a.txt
+hello
+hello golang
+Connection closed by foreign host.
+```
+
+使用自己写的client。
+
+```shell
+# go build -o client client_5file.go
+# echo 'GET a.txt'  | ./client
+2017/07/30 21:25:36 write size: 22
+2017/07/30 21:25:37 return content:
+hello
+hello golang
+```
+
