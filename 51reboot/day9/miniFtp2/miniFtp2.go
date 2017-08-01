@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"flag"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -43,6 +44,8 @@ func worker(ch chan net.Conn) {
 			getFile(name, conn)
 		case "STORE":
 			storeFile(name, conn, rd)
+		case "LS":
+			listFile(name, conn)
 		default:
 			writeError(conn, "unknown CMD\n")
 			continue
@@ -53,6 +56,28 @@ func worker(ch chan net.Conn) {
 
 func writeError(conn net.Conn, err string) {
 	conn.Write([]byte("err: " + err))
+	conn.Close()
+}
+
+func listFile(name string, conn net.Conn) {
+	var retStr string
+	fd, err := os.Open(*root + name)
+	if err != nil {
+		log.Print(err)
+	}
+	files, err := fd.Readdir(-1)
+	if err != nil {
+		log.Print(err)
+	}
+	conn.Write([]byte("type\tname\t\tsize\n"))
+	for _, f := range files {
+		if f.IsDir() {
+			retStr = fmt.Sprintf("dir\t%s\t%d\n", f.Name(), f.Size())
+		} else {
+			retStr = fmt.Sprintf("file\t%s\t%d\n", f.Name(), f.Size())
+		}
+		conn.Write([]byte(retStr))
+	}
 	conn.Close()
 }
 

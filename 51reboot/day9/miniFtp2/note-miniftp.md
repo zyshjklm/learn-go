@@ -22,3 +22,27 @@ MD5 (ftp.txt) = 99d06d4c442a7b7e609f94029377b586
 MD5 (../ftp.txt) = 99d06d4c442a7b7e609f94029377b586
 ```
 
+
+
+#### LS file
+
+```shell
+### server
+
+# go run miniFtp2.go  -r ../../
+2017/08/01 22:30:25 root: ../../
+2017/08/01 22:30:25 root: ../../
+2017/08/01 22:30:28 cmd:LS, name:day9
+
+# echo 'LS day9' | nc localhost 8021
+type	name		size
+file	.DS_Store	10244
+file	a.txt	14
+dir	client	272
+file	ftp.txt	10
+dir	long	136
+dir	miniFtp	204
+dir	miniFtp2	272
+### ...
+```
+
