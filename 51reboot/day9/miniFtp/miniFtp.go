@@ -61,7 +61,31 @@ func storeFile(name string, conn net.Conn, rd *bufio.Reader) {
 	// 原因参考：../server/readBuf.go
 	// 创建文件，向文件写入数据，往conn中写入ok。
 	// 关闭连接和文件
+	fd, err := os.Create(*root + name)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+	defer fd.Close()
 
+	// io.Copy(fd, rd)
+	buf := make([]byte, 4096)
+	for {
+		rdNum, err := rd.Read(buf)
+		if err != nil || err == io.EOF {
+			log.Print("read err:" + err.Error())
+			break
+		}
+		wrNum, err := fd.Write(buf[:rdNum])
+		if err != nil || wrNum != rdNum {
+			log.Print("write err:" + err.Error())
+			break
+		}
+		log.Print("read num:", rdNum)
+		log.Print("cont:", string(buf))
+	}
+	conn.Write([]byte("OK"))
+	conn.Close()
 }
 
 // 打开文件，读取内容，发送内容，关闭连接和文件
