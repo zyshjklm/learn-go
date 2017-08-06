@@ -164,6 +164,14 @@ go run ./socks5/socks5.go
 
 
 
+另一个测试方法，不通过switchyomega，直接使用命令：
+
+```shell
+curl -v --socks5-hostname 127.0.0.1:8022 http://www.163.com/
+```
+
+
+
 其他机器可以使用如下的方式来连接提供代理的机器
 
 ```shell
@@ -177,3 +185,18 @@ Last login: Sun Aug  6 17:05:15 2017 from ::1
 
 ```
 
+
+
+
+
+### 加密
+
+对称与非对称。
+
+
+
+作业：
+
+ftp， client, server
+
+Socks5
