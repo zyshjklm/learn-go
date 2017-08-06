@@ -101,3 +101,79 @@ Protocol mismatch.
 
 看上去是使用方法不对。需要再研究一下。
 
+
+
+### socks5 代理
+
+上面的tcp代理，可以进行tcp层的所有代理，但在使用上，默认指点了目标域名。对多个域名的访问，操作上不方便。下午实现socks5代理。
+
+
+
+#### 安装：switchyomega
+
+* https://switchyomega.com/
+* https://switchyomega.com/download.html
+
+下载后，是个switchyomega.crx文件。
+
+`在 Chrome 地址栏输入 chrome://extensions 打开扩展程序，拖动 .crx 后缀的 SwitchyOmega 安装文件到扩展程序中进行安装。`
+
+![SwitchyOmega](socks5/SwitchyOmega.png)
+
+
+
+#### 实现代理
+
+参考：http://www.jianshu.com/p/172810a70fad
+
+
+
+* 双方握手 handshake()
+  * 正常情况，还需要认证。
+  * 1字节，表示版本
+  * 1字节。表示第二字段的方法。
+* 获取客户端代理请求
+* 开始代理
+
+
+
+如果不是使用的ip，而是使用域名，则域名长度，需要一个前置的字节来表示长度。
+
+Atpe。如果是ip。则ipv4是4字节，ipv6是16字节。如果是域名，如上所述。
+
+
+
+将端口加入代理中。如前面截图所示。用web访问任意域名。观察代理日志。
+
+```shell
+go run ./socks5/socks5.go
+2017/08/06 19:43:13 new connection from 127.0.0.1:50724
+2017/08/06 19:43:13 start handle ...
+2017/08/06 19:43:13 version:5
+2017/08/06 19:43:13 nmethods: 1
+2017/08/06 19:43:13 [0]
+2017/08/06 19:43:36 new connection from 127.0.0.1:50773
+2017/08/06 19:43:36 start handle ...
+2017/08/06 19:43:36 version:5
+2017/08/06 19:43:36 nmethods: 1
+2017/08/06 19:43:36 [0]
+
+```
+
+测试对于**非https网站可以工作**，但对于https类的网站。代理会失败。
+
+
+
+其他机器可以使用如下的方式来连接提供代理的机器
+
+```shell
+netstat -na | grep 8021
+###  null
+
+ssh -D 192.168.1.108:8022 song@localhost
+Password:
+Last login: Sun Aug  6 17:05:15 2017 from ::1
+#  new tty
+
+```
+
