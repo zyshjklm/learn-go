@@ -193,10 +193,28 @@ Last login: Sun Aug  6 17:05:15 2017 from ::1
 
 对称与非对称。
 
+#### rc4对称加密
+
+**示例1：加密“hello”串**
+
+```shell
+# go run encrypt/rc4-1base.go
+2017/08/06 21:39:13 crypt#:h�
+                             K#
+2017/08/06 21:39:13 hello
+```
+
+使用同一个密钥进行加密和解密。
 
 
-作业：
 
-ftp， client, server
+**示例2：加密“hello”串**
 
-Socks5
+```shell
+# go run encrypt/rc4-2md5.go
+2017/08/06 21:40:43 �kǞr
+2017/08/06 21:40:43 hello
+```
+
+
+
