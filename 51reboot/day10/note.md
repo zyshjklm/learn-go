@@ -218,3 +218,54 @@ Last login: Sun Aug  6 17:05:15 2017 from ::1
 
 
 
+**示例3：流式加密**
+
+```shell
+# go build -o rc4 encrypt/rc4-3stream.go
+# echo 'hello' | ./rc4 -k '123456' | ./rc4 -k '123456'
+hello
+2017/08/06 21:54:34 EOF
+2017/08/06 21:54:34 EOF
+
+./rc4  -k '123456' < rc4-1base.go > rc4.encrypt
+./rc4  -k '123456' <  rc4.encrypt > rc4.dst
+md5 rc4-1base.go rc4.dst
+MD5 (rc4-1base.go) = aea2936d8670f8518aa7dcd5b68a119a
+MD5 (rc4.dst) = aea2936d8670f8518aa7dcd5b68a119a
+```
+
+Tar and rc4
+
+```shell
+# cd github.com/jungle85gopy/learn-go/51reboot/day10/
+# find ./homework -type f | xargs md5
+MD5 (./homework/chat/main.go) = 3896d3cd006200bf1527e5f52edc2acb
+MD5 (./homework/ftp/ftp_server.go) = 39d2b3f1b41b9f8a9f1b5bdbfc9779b3
+MD5 (./homework/homework.md) = 483fa2cfa4a87bc0ee4688162ee5e585
+
+#### 压缩并加密homework目录
+# tar -zcf - homework | encrypt/rc4 -k '12345678' > home.tar.gz
+
+#### 在新的目录下，方便解压，避免原目录已经存在homework目录
+# mv home.tar.gz encrypt
+# cd encrypt
+
+# ./rc4 -k '12345678' < home.tar.gz | tar -zxf -
+2017/08/06 22:05:50 EOF
+# echo $?
+0
+
+# ls -lh homework
+total 8
+drwxr-xr-x  3 song  staff   102B Aug  6 15:52 chat
+drwxr-xr-x  3 song  staff   102B Aug  6 15:52 ftp
+-rw-r--r--@ 1 song  staff   3.2K Aug  6 16:02 homework.md
+
+# find homework -type f | xargs md5
+MD5 (homework/chat/main.go) = 3896d3cd006200bf1527e5f52edc2acb
+MD5 (homework/ftp/ftp_server.go) = 39d2b3f1b41b9f8a9f1b5bdbfc9779b3
+MD5 (homework/homework.md) = 483fa2cfa4a87bc0ee4688162ee5e585
+```
+
+经压缩，加密；再反解后，得到的文件与原文件相同。
+
