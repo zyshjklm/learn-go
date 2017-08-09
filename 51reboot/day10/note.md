@@ -124,6 +124,24 @@ Protocol mismatch.
 
 
 
+#### 使用ssh -D来进行socks5代理
+
+```shell
+
+ssh -D 0.0.0.0:8022 song@localhost
+Password:
+Last login: Wed Aug  9 00:01:24 2017 from 127.0.0.1
+
+### 新的终端tty
+netstat -na | grep 8022
+tcp4       0      0  *.8022     *.*           LISTEN
+
+```
+
+在浏览器中，在代理中设置如上图。然后在浏览器中使用该代理项，再访问网页，应该就能正常浏览了。
+
+
+
 #### 实现代理
 
 参考：http://www.jianshu.com/p/172810a70fad
