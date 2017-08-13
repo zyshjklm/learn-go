@@ -26,13 +26,12 @@ func mustReadByte(r *bufio.Reader) byte {
 
 // 握手。进行授权认证
 func handshake(conn net.Conn, r *bufio.Reader) (err error) {
-	defer func(err error) {
-		e := recover()
+	defer func() {
+		e := recover() // interface{}
 		if e != nil {
 			err = e.(error)
-			return
 		}
-	}(err)
+	}()
 
 	// version
 	version := mustReadByte(r)
@@ -55,13 +54,12 @@ func handshake(conn net.Conn, r *bufio.Reader) (err error) {
 
 // 获取需要代理的域名
 func readAddr(r *bufio.Reader) (addrPort string, err error) {
-	defer func(lerr error) {
-		e := recover()
+	defer func() {
+		e := recover() // interface{}
 		if e != nil {
-			lerr = e.(error)
-			return
+			err = e.(error)
 		}
-	}(err)
+	}()
 
 	funcName := "readAddr():"
 	log.Printf("run %s ...", funcName)
