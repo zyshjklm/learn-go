@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	port = flag.String("port", ":8022", "port for socks5")
+	socks5 = flag.String("s", ":8022", "port for socks5")
 )
 
 func mustReadByte(r *bufio.Reader) byte {
@@ -142,7 +142,7 @@ func handleConn(conn net.Conn) {
 
 func main() {
 	flag.Parse()
-	listener, err := net.Listen("tcp", *port)
+	listener, err := net.Listen("tcp", *socks5)
 	if err != nil {
 		log.Fatal(err)
 	}
