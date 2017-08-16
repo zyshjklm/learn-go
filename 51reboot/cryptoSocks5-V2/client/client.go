@@ -12,7 +12,7 @@ import (
 
 var (
 	client = flag.String("c", ":8020", "client port")
-	proxy  = flag.String("p", ":8021", " proxy port")
+	proxy  = flag.String("p", ":8022", " proxy port")
 )
 
 const key = "123456"
