@@ -55,8 +55,8 @@ func handleConn(listenConn net.Conn) {
 	// 对conn进行加密Writer封装，remote数据Copy到Writer，直到remote端EOF
 	go func() {
 		defer wg.Done()
-		rWr := mycrypto.NewCryptoWriter(listenConn, key)
-		io.Copy(rWr, remoteConn)
+		lWr := mycrypto.NewCryptoWriter(listenConn, key)
+		io.Copy(lWr, remoteConn)
 	}()
 	wg.Wait()
 	log.Printf("shut of listen of %s", listenConn.RemoteAddr().String())

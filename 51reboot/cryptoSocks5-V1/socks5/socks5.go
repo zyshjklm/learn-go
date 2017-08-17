@@ -103,7 +103,7 @@ func socks5Auth(conn net.Conn, r *bufio.Reader) (addr string, err error) {
 	}
 	log.Printf("addr: %s\n", addr)
 	// resp 响应客户端连接成功
-	resp := []byte{0x05, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	resp := []byte{0x05, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	conn.Write(resp)
 	return addr, nil
 }
@@ -124,6 +124,8 @@ func handleConn(conn net.Conn) {
 		conn.Close()
 		return
 	}
+	defer remote.Close()
+
 	wg := new(sync.WaitGroup)
 	wg.Add(2)
 	go func() {
@@ -136,8 +138,6 @@ func handleConn(conn net.Conn) {
 	}()
 	wg.Wait()
 	log.Printf("shut of %s", conn.RemoteAddr().String())
-	conn.Close()
-	remote.Close()
 }
 
 func main() {
