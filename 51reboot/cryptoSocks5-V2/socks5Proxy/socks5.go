@@ -119,7 +119,7 @@ func socks5Auth(r *bytes.Buffer, wr io.Writer) (addr string, err error) {
 		return "", err
 	}
 	// resp 响应客户端连接成功
-	resp := []byte{0x05, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	resp := []byte{0x05, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	wr.Write(resp)
 	return
 }
@@ -178,6 +178,7 @@ func handleConn(conn net.Conn) {
 		conn.Close()
 		return
 	}
+	defer remote.Close()
 
 	// from decrypt to remote
 	go func() {
@@ -200,8 +201,6 @@ func handleConn(conn net.Conn) {
 
 	wg.Wait()
 	log.Printf("shut of %s", conn.RemoteAddr().String())
-	conn.Close()
-	remote.Close()
 }
 
 func main() {
