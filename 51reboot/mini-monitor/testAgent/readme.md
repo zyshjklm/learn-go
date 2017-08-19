@@ -27,3 +27,15 @@ agent2.go
 
 需要启动一个监听端口。
 
+
+
+agent3.go
+
+```Shell
+# nc -l 127.0.0.1 6000
+
+# go run agent3.go
+2017/08/19 23:26:10 {"metric":"cpu.usage","endpoint":"jungle85","tag":["darwin"],"value":3.015075376884422,"timestamp":1503156370}
+2017/08/19 23:26:10 {"metric":"mem.usage","endpoint":"jungle85","tag":["darwin"],"value":522215424000,"timestamp":1503156370}
+```
+
