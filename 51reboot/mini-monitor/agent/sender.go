@@ -33,7 +33,7 @@ func (s *Sender) Channel() chan *common.Metric {
 
 // connect retry connect to transfer.
 func (s *Sender) connect() net.Conn {
-	baseGap := 100 * time.Microsecond
+	baseGap := 500 * time.Millisecond
 	for {
 		conn, err := net.Dial("tcp", s.addr)
 		if err != nil {
