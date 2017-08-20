@@ -3,8 +3,6 @@ package main
 import (
 	"flag"
 	"log"
-	"os"
-	"runtime"
 	"time"
 
 	"github.com/jungle85gopy/learn-go/51reboot/mini-monitor/common"
@@ -13,22 +11,9 @@ import (
 )
 
 var transAddr = flag.String("trans", ":6000", "transfer address")
-var hostname string
-
-// NewMetric new a Metric
-func NewMetric(metric string, value float64) *common.Metric {
-	return &common.Metric{
-		Metric:    metric,
-		Endpoint:  hostname,
-		Value:     value,
-		Tag:       []string{runtime.GOOS},
-		Timestamp: time.Now().Unix(),
-	}
-}
 
 func main() {
 	flag.Parse()
-	hostname, _ = os.Hostname()
 
 	sender := NewSender(*transAddr)
 	ch := sender.Channel()
@@ -41,14 +26,14 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		metric := NewMetric("cpu.usage", cpus[0])
+		metric := common.NewMetric("cpu.usage", cpus[0])
 		ch <- metric
 
 		mem, err := mem.VirtualMemory()
 		if err != nil {
 			log.Print(err)
 		}
-		metric = NewMetric("mem.usage", float64(mem.Total)*mem.UsedPercent/1024/1024)
+		metric = common.NewMetric("mem.usage", float64(mem.Total)*mem.UsedPercent/1024/1024)
 		ch <- metric
 	}
 }
