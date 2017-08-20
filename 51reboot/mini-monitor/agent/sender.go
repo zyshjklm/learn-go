@@ -45,7 +45,7 @@ func (s *Sender) connect() net.Conn {
 			}
 			continue
 		}
-		log.Printf("local addr:%s\n", conn.LocalAddr())
+		debugInfo(fmt.Sprintf("local addr:%s\n", conn.LocalAddr()))
 		return conn
 	}
 }
@@ -70,13 +70,14 @@ func (s *Sender) Start() {
 		select {
 		case metric := <-s.ch:
 			buf, _ := json.Marshal(metric)
+			debugInfo("~~ sender get metric")
 			_, err := fmt.Fprintf(w, "%s\n", buf)
 			if err != nil {
 				log.Printf("Fprintf to remote err:%s", err.Error())
 				w = s.reConnect(conn)
 			}
 		case <-ticker.C:
-			// log.Print("-- Flush data to transfer from bufio of conn.")
+			debugInfo("-- Flush data to transfer from bufio of conn.")
 			err := w.Flush()
 			if err != nil {
 				log.Printf("Flush to remote err:%s", err.Error())
