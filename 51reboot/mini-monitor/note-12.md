@@ -2,7 +2,7 @@
 
 第12次课。第一次监控课。
 
-
+![agent](pics/agent.png)
 
 先在testAgent/目录下写了三轮小的采集agent。下面开始统一在一个目录下进行迭代完善。
 
@@ -11,7 +11,43 @@
 * agent/main.go 基于testAgent/agent3.go文件
 * agent/sender.go，发送端。这样在主程序中，不用关心发送的细节。
 
+分工：
+
+* agent中的采集项负责生产数据，将数据发送到channel中，
+* sender负责消耗数据，将数据发送到下游的transfer。
+
 需要注意的事，两个文件都是`package main`，这在编译时需要注意。
+
+Start方法的核心。
+
+```go
+conn, err := net.Dial("tcp", s.addr)
+if err != nil {
+    panic(err)
+}
+
+for metric := range s.ch {
+  	buf, _ := json.Marshal(metric)
+  	fmt.Fprintf(conn, "%s\n", buf)
+}
+```
+
+main()函数
+
+```go
+ticker = time.NewTicker(time.Second * 5)
+for range ticker.C {
+  	// collect
+	cpus,_ := cpu.Percent(time.Second, false)
+  	metric := &common.Metric{ //...
+  	}
+  	ch <- metric
+}
+```
+
+
+
+运行：
 
 ```shell
 # go run main.go
