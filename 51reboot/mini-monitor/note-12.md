@@ -79,6 +79,18 @@ for range ticker.C {
 
 这样6000端口也能收到数据。
 
+
+
+构造一个NewMetric函数，用来生成要发送的metric。
+
+```go
+
+metric := NewMetric("cpu.usage", cpus[0])
+ch <- metric
+```
+
+
+
 #### 2）第二轮 完善sender中的远端连接与重试。
 
 agent/sender.go完善：
@@ -87,10 +99,10 @@ agent/sender.go完善：
   - 建立到远端transfer的连接，失败时按2的指数延迟重试。
   - 最小间隔0.1秒，最大间隔30秒。
 - 新增reConnect()，当发送中失败时，用于清理conn并调用connect重建连接
-- 完善Start() ：
-  - 使用bufio封装Writer。
+- 完善Start() ：使用**定时定量发送**。
+  - 使用bufio封装Writer。默认会蓄4k的数据，没达到就会一直等待，实现定量。
   - 当有数据到达时，将数据写入Writer
-  - 基于ticker，每5秒刷新写一次Writer。而不是每来一条记录就写一次
+  - 基于ticker，每5秒刷新写一次Writer。而不是每来一条记录就写一次，实现定时。
 
 尝试运行：
 

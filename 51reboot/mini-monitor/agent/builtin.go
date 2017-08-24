@@ -24,6 +24,7 @@ func CPUMetric() (ret SPtr2Metric) {
 
 	cpuload, err := load.Avg()
 	if err == nil {
+		// for linux
 		metric = common.NewMetric("cpu.load1", cpuload.Load1)
 		ret = append(ret, metric)
 
