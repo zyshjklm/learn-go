@@ -23,6 +23,6 @@ type config struct {
 }
 
 var (
-	configPath = flag.String("config", "../config/config.toml", "config path")
+	configPath = flag.String("config", "../config/agent.toml", "config path")
 	gcfg       config
 )
