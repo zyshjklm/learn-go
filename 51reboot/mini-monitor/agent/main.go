@@ -22,6 +22,8 @@ func main() {
 	sched.AddMetric(CPUMetric, time.Second*5)
 	sched.AddMetric(MemMetric, time.Second*3)
 	sched.AddMetric(DiskMetric, time.Second*15)
+	// user defined metric
+	sched.AddMetric(UserMetric, time.Second*5)
 	sched.Wait()
 }
 

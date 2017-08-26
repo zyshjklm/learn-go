@@ -1,0 +1,47 @@
+package main
+
+import (
+	"bufio"
+	"log"
+	"os/exec"
+	"strconv"
+	"strings"
+
+	"github.com/jungle85gopy/learn-go/51reboot/mini-monitor/common"
+)
+
+// UserMetric for user metrics
+func UserMetric() (ret SPtr2Metric) {
+	userMetric, err := getUserMetrics("./userDefined/user.py")
+	if err != nil {
+		log.Println(err)
+	}
+	return userMetric
+}
+
+// 构造命令；获取标准输出；按行解析；获取key/value；包装common.Metric
+func getUserMetrics(srcCmd string) (ret SPtr2Metric, err error) {
+	cmd := exec.Command("bash", "-c", srcCmd)
+	out, _ := cmd.StdoutPipe()
+	if er := cmd.Start(); er != nil {
+		log.Print("command run err:", er)
+		return nil, er
+	}
+	f := bufio.NewReader(out)
+	for {
+		line, er := f.ReadString('\n')
+		if er != nil {
+			break
+		}
+		line = strings.TrimSpace(line)
+		fields := strings.Fields(line)
+		value, err := strconv.ParseFloat(fields[1], 64)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		metric := common.NewMetric(fields[0], value)
+		ret = append(ret, metric)
+	}
+	return
+}
