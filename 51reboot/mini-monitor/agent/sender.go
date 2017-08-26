@@ -13,15 +13,19 @@ import (
 
 // Sender for agent
 type Sender struct {
-	addr string
-	ch   chan *common.Metric
+	addr          string
+	maxRetry      int
+	flushInterval int
+	ch            chan *common.Metric
 }
 
 // NewSender 构造函数
-func NewSender(addr string) *Sender {
+func NewSender(scfg SenderConfig) *Sender {
 	sender := &Sender{
-		addr: addr,
-		ch:   make(chan *common.Metric, 1024),
+		addr:          scfg.TransAddr,
+		maxRetry:      scfg.MaxSleepTime,
+		flushInterval: scfg.FlushInterval,
+		ch:            make(chan *common.Metric, scfg.BufferLen),
 	}
 	return sender
 }
@@ -40,8 +44,8 @@ func (s *Sender) connect() net.Conn {
 			log.Print(err)
 			time.Sleep(baseGap)
 			baseGap *= 2
-			if baseGap > time.Second*30 {
-				baseGap = time.Second * 30
+			if baseGap > time.Second*time.Duration(s.maxRetry) {
+				baseGap = time.Second * time.Duration(s.maxRetry)
 			}
 			continue
 		}
@@ -65,7 +69,7 @@ func (s *Sender) Start() {
 	conn = s.connect()
 	w := bufio.NewWriter(conn)
 
-	ticker := time.NewTicker(time.Second * 5)
+	ticker := time.NewTicker(time.Second * time.Duration(s.flushInterval))
 	for {
 		select {
 		case metric := <-s.ch:
