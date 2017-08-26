@@ -19,6 +19,18 @@ func UserMetric() (ret SPtr2Metric) {
 	return userMetric
 }
 
+// NewUserMetric new user metric func
+func NewUserMetric(cmdstr string) MetricFunc {
+	return func() SPtr2Metric {
+		metrics, err := getUserMetrics(cmdstr)
+		if err != nil {
+			log.Print("get user metric err:", err)
+			return []*common.Metric{}
+		}
+		return metrics
+	}
+}
+
 // 构造命令；获取标准输出；按行解析；获取key/value；包装common.Metric
 func getUserMetrics(srcCmd string) (ret SPtr2Metric, err error) {
 	cmd := exec.Command("bash", "-c", srcCmd)
