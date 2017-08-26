@@ -55,5 +55,8 @@ func getUserMetrics(srcCmd string) (ret SPtr2Metric, err error) {
 		metric := common.NewMetric(fields[0], value)
 		ret = append(ret, metric)
 	}
+	// Wait waitfor the cmd to exit,
+	// and release any resource associated with the cmd
+	cmd.Wait()
 	return
 }
