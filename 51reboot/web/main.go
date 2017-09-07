@@ -2,7 +2,6 @@ package main
 
 import (
 	"crypto/md5"
-	"database/sql"
 	"fmt"
 	"html/template"
 	"io"
@@ -11,11 +10,21 @@ import (
 	"path/filepath"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 )
 
 var (
-	db *sql.DB
+	db *sqlx.DB
 )
+
+// User for sql row
+type User struct {
+	ID       int    `json:"id"`
+	Name     string `json:"name"`
+	Password string `json:"-" xml:"-"`
+	Note     string `json:"note"`
+	Isadmin  bool   `json:"isadmin"`
+}
 
 func render(w http.ResponseWriter, name string, data interface{}) {
 	tplFile := filepath.Join("template", name+".tpl")
@@ -37,7 +46,8 @@ func Add(w http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("name")
 	passwd := fmt.Sprintf("%x", md5.Sum([]byte(r.FormValue("password"))))
 	note := r.FormValue("note")
-	res, err := db.Exec("INSERT INTO user VALUES(NULL, ?, ?, ?,?)", name, passwd, note, 1)
+
+	res, err := db.Exec("INSERT INTO user VALUES(NULL, ?, ?, ?, ?)", name, passwd, note, 1)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -49,22 +59,24 @@ func Add(w http.ResponseWriter, r *http.Request) {
 // CheckLogin usage
 func CheckLogin(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	user := r.FormValue("user")
+	name := r.FormValue("user")
 	passwd := r.FormValue("password")
-
-	var oriPasswd string
 	// 查询数据库
-	row := db.QueryRow("SELECT password FROM user WHERE name = ?", user)
-	err := row.Scan(&oriPasswd)
-	if err == sql.ErrNoRows {
-		log.Print(err)
+	var user User
+	err := db.Get(&user, "SELECT password FROM user WHERE name = ?", name)
+	if err != nil {
+		render(w, "login", "user not found")
 		return
 	}
 	// 计算passwd的md5与刚才获取的值是否相同。不同则失败。
-	if fmt.Sprintf("%x", md5.Sum([]byte(passwd))) != oriPasswd {
-		fmt.Fprintf(w, "user:%s, password:%s login error", user, passwd)
-		return
+	if fmt.Sprintf("%x", md5.Sum([]byte(passwd))) != user.Password {
+		render(w, "login", "bad password or username")
 	}
+	http.SetCookie(w, &http.Cookie{
+		Name:   "user",
+		Value:  name,
+		MaxAge: 30,
+	})
 	http.Redirect(w, r, "/hello", 302)
 }
 
@@ -80,36 +92,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var err error
-	db, err = sql.Open("mysql", "golang:golang@tcp(59.110.12.72:3306)/go")
+	db, err = sqlx.Open("mysql", "golang:golang@tcp(59.110.12.72:3306)/go")
 	if err != nil {
 		log.Fatal(err)
 	}
 	err = db.Ping()
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	row := db.QueryRow("SELECT CURRENT_USER()")
-	var user string
-	row.Scan(&user)
-	log.Print(user)
-
-	rows, err := db.Query("SELECT * FROM user")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer rows.Close()
-	var (
-		id      int
-		name    string
-		passwd  string
-		note    string
-		isadmin int
-	)
-	for rows.Next() {
-		rows.Scan(&id, &name, &passwd, &note, &isadmin)
-		log.Print(id, name, passwd, note, isadmin)
 	}
 
 	// 声明式挂载
