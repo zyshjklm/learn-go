@@ -5,8 +5,9 @@
         <p>password:<input type="password" name="password" /></p>
         <p><input type="submit"/> </p>
     </form>
-
-    {{.ErrorMsg}}
     
+    {{ if . }}
+    <p style="color:red">{{.}}</p>
+    {{end}}
 </body>
 </html>

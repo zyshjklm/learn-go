@@ -56,6 +56,17 @@ func Add(w http.ResponseWriter, r *http.Request) {
 	log.Print(res.RowsAffected())
 }
 
+// List all user as table
+func List(w http.ResponseWriter, r *http.Request) {
+	var users []User
+	err := db.Select(&users, "SELECT * FROM user")
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	render(w, "list", users)
+}
+
 // CheckLogin usage
 func CheckLogin(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
@@ -104,6 +115,7 @@ func main() {
 	// 声明式挂载
 	http.HandleFunc("/login", Login)
 	http.HandleFunc("/add", Add)
+	http.HandleFunc("/list", List)
 	http.HandleFunc("/hello", Hello)
 	http.HandleFunc("/checkLogin", CheckLogin)
 	log.Fatal(http.ListenAndServe(":8090", nil))
