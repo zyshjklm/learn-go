@@ -117,15 +117,6 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	render(w, "login", nil)
 }
 
-type counter struct {
-	count int
-}
-
-func (c *counter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	c.count++
-	fmt.Fprint(w, c.count)
-}
-
 func main() {
 	var err error
 	db, err = sqlx.Open("mysql", "golang:golang@tcp(59.110.12.72:3306)/go")
@@ -137,16 +128,26 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// http.HandlerFunc -> func,  -> use http.HandleFunc to mount
+	// http.Handler -> interface, -> use http.Handle to mount
+	// Login -> http.Handler :
+	// http.HandlerFunc(Login) -> http.Handler
+
 	// 声明式挂载
-	http.HandleFunc("/login", Login)
+	loginCounter := NewCounter(http.HandlerFunc(Login))
+	http.Handle("/login", loginCounter)
+	http.HandleFunc("/loginCounter", loginCounter.GetCounter)
+
 	http.HandleFunc("/add", NeedLogin(Add))
 	http.HandleFunc("/list", NeedLogin(List))
 	http.HandleFunc("/hello", NeedLogin(Hello))
 	http.HandleFunc("/checkLogin", CheckLogin)
 
-	c := new(counter)
-	http.Handle("/counter", c)
-
 	h := handlers.LoggingHandler(os.Stderr, http.DefaultServeMux)
-	log.Fatal(http.ListenAndServe(":8090", h))
+	c := NewCounter(h)
+	http.HandleFunc("/counter", c.GetCounter)
+
+	log.Fatal(http.ListenAndServe(":8090", c))
+	// 对于一个/login请求，会被多次中间件封装：
+	// /login -> c(counter) -> h(log) ->mux route --> // couter + login //
 }
