@@ -181,6 +181,10 @@ func main() {
 	http.HandleFunc("/hello", NeedLogin(Hello))
 	http.HandleFunc("/checkLogin", CheckLogin)
 
+	// file server 将当前目录做成文件服务器:
+	// http://localhost:8090/static
+	http.Handle("/static/", http.FileServer(http.Dir(".")))
+
 	// api usage : curl localhost:8090/users?f=xml
 	http.HandleFunc("/users", Users)
 
