@@ -7,9 +7,11 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/handlers"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -67,6 +69,18 @@ func List(w http.ResponseWriter, r *http.Request) {
 	render(w, "list", users)
 }
 
+// NeedLogin for check login
+func NeedLogin(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		_, err := r.Cookie("user")
+		if err != nil {
+			render(w, "login", "login out of time")
+			return
+		}
+		h(w, r)
+	}
+}
+
 // CheckLogin usage
 func CheckLogin(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
@@ -86,9 +100,9 @@ func CheckLogin(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:   "user",
 		Value:  name,
-		MaxAge: 30,
+		MaxAge: 10,
 	})
-	http.Redirect(w, r, "/hello", 302)
+	http.Redirect(w, r, "/list", 302)
 }
 
 // Hello for hello
@@ -114,9 +128,11 @@ func main() {
 
 	// 声明式挂载
 	http.HandleFunc("/login", Login)
-	http.HandleFunc("/add", Add)
-	http.HandleFunc("/list", List)
-	http.HandleFunc("/hello", Hello)
+	http.HandleFunc("/add", NeedLogin(Add))
+	http.HandleFunc("/list", NeedLogin(List))
+	http.HandleFunc("/hello", NeedLogin(Hello))
 	http.HandleFunc("/checkLogin", CheckLogin)
-	log.Fatal(http.ListenAndServe(":8090", nil))
+
+	h := handlers.LoggingHandler(os.Stderr, http.DefaultServeMux)
+	log.Fatal(http.ListenAndServe(":8090", h))
 }
