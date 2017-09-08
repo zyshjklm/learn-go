@@ -68,7 +68,7 @@ func List(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
-	render(w, "list", users)
+	render(w, "list.html", users)
 }
 
 // NeedLogin for check login
