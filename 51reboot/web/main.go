@@ -10,6 +10,8 @@ import (
 	"os"
 	"path/filepath"
 
+	_ "net/http/pprof"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/handlers"
 	"github.com/jmoiron/sqlx"
@@ -115,6 +117,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	render(w, "login", nil)
 }
 
+type counter struct {
+	count int
+}
+
+func (c *counter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	c.count++
+	fmt.Fprint(w, c.count)
+}
+
 func main() {
 	var err error
 	db, err = sqlx.Open("mysql", "golang:golang@tcp(59.110.12.72:3306)/go")
@@ -132,6 +143,9 @@ func main() {
 	http.HandleFunc("/list", NeedLogin(List))
 	http.HandleFunc("/hello", NeedLogin(Hello))
 	http.HandleFunc("/checkLogin", CheckLogin)
+
+	c := new(counter)
+	http.Handle("/counter", c)
 
 	h := handlers.LoggingHandler(os.Stderr, http.DefaultServeMux)
 	log.Fatal(http.ListenAndServe(":8090", h))
