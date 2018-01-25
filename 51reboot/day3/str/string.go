@@ -48,6 +48,8 @@ func main() {
 	fmt.Printf("%c\n", 'a'+('H'-'h'))
 
 	fmt.Println(toUpper("Hello"))
+
+	printASCII()
 }
 
 func toUpper(s string) string {

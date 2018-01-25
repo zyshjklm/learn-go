@@ -27,7 +27,7 @@ uint8 	 1
 fmt.Println(reflect.TypeOf(x1), "\t", unsafe.Sizeof(x1))
 ```
 
-int后面的数字，代表的是**bit数**。
+int后面的数字，代表的是**byte数**。
 
 一定要注意变量的字节情况，特别是写网络程序，收发包在双方的系统差异大时，不注意可能出现问题。溢出，字节序等。
 
@@ -102,6 +102,8 @@ iota 自动加1.
 
 使用strconv.FormatInt生成随机串。
 
+代码：strong/main.go
+
 
 
 ## if 
@@ -118,5 +120,5 @@ if x {
 
 if 没有小括号；只能是bool表达式，数字。字符串之类的不行。
 
-
+if/main.go
 

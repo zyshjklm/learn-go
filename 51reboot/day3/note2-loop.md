@@ -9,6 +9,10 @@
 
 ### swich
 
+for/main.go
+
+switch/main.go
+
 
 
 ### file open seek
@@ -21,6 +25,11 @@
 * Read
 * bufio.ReadString
 
+
+示例文件：
+
+* open/main.go
+* read/main.go
 
 
 
@@ -36,13 +45,28 @@ rand/main.go
 
 
 
+
 #### fmt 乘法表
+
+fmt/fmt.go
 
 
 
 #### counter
 
 实现2个操作数的加减乘除。
+
+```shell
+go run counter/main.go 10 \* 3
+10 * 3
+30
+
+go run counter/main.go 10 / 0
+10 / 0
+fatal: div by zero!
+```
+
+counter/main.go
 
 
 
@@ -52,5 +76,5 @@ rand/main.go
 
 列出类型及大小。
 
-
+myls/main.go
 
