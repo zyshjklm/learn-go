@@ -34,6 +34,15 @@ for name := range ages {
 
 Code: map/main.go
 
+
+
+删除操作：
+
+```go
+// 删除map中key所对应的value.
+delete(dict, 'key')
+```
+
 #### 词频统计
 
 通过map来保存词频。
@@ -71,4 +80,11 @@ qq	1
 
 code: counter/main.go
 
-​		
+
+
+#### set
+
+code:mapSet/main.go
+
+
+
