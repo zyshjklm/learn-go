@@ -35,6 +35,8 @@ MD5 (note-homework.md) = 9364a2e5cd78c1f8969471dc9d8c6e24
 
 code: md5/main.go
 
+这个例子处理的是字节数组。[]byte。
+
 
 
 ### 3 slice
@@ -58,7 +60,6 @@ fmt.Println(&s[0])
 
 // 0xc4200720c8 . 两者的地址相同。
 fmt.Println(&primes[1])
-
 ```
 
 
@@ -112,4 +113,20 @@ len=17 cap=32 [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17]
 ```
 
 Code: append/main.go
+
+
+
+#### reverseSlice 
+
+随机反转rev1/main.go
+
+单词反转rev2/main.go
+
+```shell
+#cat rev2/test.txt
+append array counter fmt json map md5 my.txt note-array-slice.md note-fmt-shell.md note-homework.md note-map.md note-struct.md rev1 rev2 shell slice struct
+
+#go run rev2/main.go rev2/test.txt
+struct slice shell rev2 rev1 note-struct.md note-map.md note-homework.md note-fmt-shell.md note-array-slice.md my.txt md5 map json fmt counter array append
+```
 
