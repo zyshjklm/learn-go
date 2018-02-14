@@ -4,7 +4,7 @@ import "fmt"
 
 func main() {
 	var s = make([]int, 0, 1)
-	fmt.Println(s)
+	printSlice(s)
 
 	for i := 1; i < 18; i++ {
 		s = append(s, i)
@@ -13,5 +13,5 @@ func main() {
 }
 
 func printSlice(s []int) {
-	fmt.Printf("len=%d cap=%d %v\n", len(s), cap(s), s)
+	fmt.Printf("len=%2d cap=%2d %v\n", len(s), cap(s), s)
 }

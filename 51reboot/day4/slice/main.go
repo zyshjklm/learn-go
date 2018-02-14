@@ -51,7 +51,10 @@ func main() {
 	printSlice(s2)
 	fmt.Println(&s2)
 
-	s2 = s2[:4]
+	// 这里是很神奇的操作。s2的长度是0了，却还能做切片操作
+	// 因为其是slice，有了首地址，还有cap值，小于cap都能操作
+	// 若是s2[:8]则会报“slice bounds out of range”
+	s2 = s2[:cap(s2)]
 	printSlice(s2)
 	fmt.Println(&s2[0])
 
