@@ -33,3 +33,6 @@ Code: fmt/main.go
 - 通过f = bufio.NewReader(os.Stdin); f.ReadString('\n')
 
 第二种方式更能控制读取一行。
+
+code:shell/main.go
+
