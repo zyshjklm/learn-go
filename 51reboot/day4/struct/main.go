@@ -17,11 +17,15 @@ func main() {
 	var str = "str"
 	fmt.Println(unsafe.Sizeof(s))      // 24
 	fmt.Println(unsafe.Sizeof(s.Id))   // 8
-	fmt.Println(unsafe.Sizeof(s.Name)) // 16
-	fmt.Println(unsafe.Sizeof(str))    // 16
-	fmt.Println(len(str))              // 33
+	fmt.Println(unsafe.Sizeof(s.Name)) //
+	fmt.Println("\ninfo of str:")
+	fmt.Println(unsafe.Sizeof(str)) // 16
+	fmt.Println(len(str))           // 3
+
 	var x int8
 	fmt.Println(unsafe.Sizeof(x))
+
+	// style 2 for init
 	s1 := Student{
 		Id:   2,
 		Name: "alice",

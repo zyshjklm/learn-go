@@ -13,11 +13,11 @@ fmt.Println(unsafe.Sizeof(s))      // 24
 fmt.Println(unsafe.Sizeof(s.Id))   // 8
 fmt.Println(unsafe.Sizeof(s.Name)) // 16
 fmt.Println(unsafe.Sizeof(str))    // 16
-fmt.Println(len(str))              // 33
+fmt.Println(len(str))              // 3
 // 上述的单位是字节数。uint8的长度是1字节。
 
 // 字符串变量str，变量其实是一个指针，占用16字节。
-// 而str指向的空间的长度是33字节。
+// 而str指向的空间的长度是3字节。
 ```
 
 另外，结构体本身可以通过指针来标识。当指针p指向一个结构体时，如上的s变量，则p.Name和s.Name是一个变量。
