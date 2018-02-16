@@ -5,6 +5,12 @@ import (
 	"strings"
 )
 
+var f = func(x, y int) int {
+	// return
+	s := x + y
+	return s
+}
+
 // strings.Map
 // func Map(mapping func(rune) rune, s string) string
 // http://localhost:6060/pkg/strings/#Map

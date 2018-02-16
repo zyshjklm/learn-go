@@ -27,4 +27,14 @@ func main() {
 		}
 		fmt.Println(n)
 	}
+	fmt.Print("\n--- style 2 ---\n")
+	end := 10
+	for i := 1; i < end; i++ {
+		f := iter([]int{i})
+		n, err := f()
+		if err != nil {
+			break
+		}
+		fmt.Println(n)
+	}
 }
