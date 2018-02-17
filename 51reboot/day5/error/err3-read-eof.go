@@ -41,8 +41,8 @@ func read(f *os.File) (string, error) {
 		}
 		if err != nil {
 			return "", err
-		}
-		total = append(total, total[:n]...)
+		}	
+		total = append(total, buf[:n]...)
 	}
 	return string(total), nil
 }
