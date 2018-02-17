@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os/exec"
-	"time"
 )
 
 func main() {
@@ -24,6 +23,6 @@ func main() {
 		}
 		fmt.Print(line)
 	}
-	time.Sleep(time.Hour)
-	// cmd.Wait()
+	// time.Sleep(time.Hour)
+	cmd.Wait()
 }

@@ -16,10 +16,12 @@ func main() {
 	for {
 		fmt.Print(prompt)
 		if !r.Scan() {
-			fmt.Println(r.Err())
+			// returns false when the scan stops,
+			// either by reaching the end of the input or an error.
+			fmt.Println("scan err:", r.Err())
 			break
 		}
-		fmt.Println("\t--r.Err():", r.Err())
+		// fmt.Println("\t--r.Err():", r.Err())
 		line := r.Text()
 
 		// 注释的部分，使用了另一种方式来获取输入
