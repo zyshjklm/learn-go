@@ -43,15 +43,15 @@ type q Path	// type 类型
 
 #### 函数到方法
 
-* method-point-dist.go。基于Point结构体
+* method-point-dist.go。object/method1-dist-point.go。基于Point结构体
   * 实现其计算距离的Distance(p, q Point)函数。
   * 实现计算距离的方法p.Distance(q Point)
-* method-pointSlice-dist.go。基于[]Point
+* method-pointSlice-dist.go。object/method2-dist-slice.go。基于[]Point
   * 实现Point的Distance方法
   * 实现[]Point的距离函数Distance(  path []Point) (length float64)
   * 实现[]Point的距离函数Distance1(path []Point) (length float64)
   * 这里没有[]Point的距离方法。
-* method-path-dist.go。基于Path类型，代替[]Point。
+* method-path-dist.go。object/method3-dist-path.go。基于Path类型，代替[]Point。
   * 实现Point的Distance方法
   * 定义Path类型： type Path []Point
   * 实现Path的距离方法 (path Path) Distance() float64 
