@@ -10,7 +10,7 @@ import (
 
 func unTar(base string, r io.Reader) error {
 	// create a reader for tar
-	tr := tar.NewReader(os.Stdin)
+	tr := tar.NewReader(r)
 	for {
 		hdr, err := tr.Next()
 		if err == io.EOF {
