@@ -14,6 +14,15 @@ func main() {
 	fmt.Println(f)
 	_ = f
 
+	wa, ok := w.(*bytes.Buffer)
+	if ok {
+		fmt.Println("assert ok")
+	} else {
+		fmt.Println("assert err")
+	}
+	_ = wa
+	// use x, ok for assert
+
 	c := w.(*bytes.Buffer)
 	fmt.Println(c)
 	_ = c
