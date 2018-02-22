@@ -152,28 +152,17 @@ func (g *Grade) Load(args []string) error {
 // MarshalJSON my own marshal.
 // cls must be a struct copy. not pointer
 func (g Grade) MarshalJSON() ([]byte, error) {
-	return json.Marshal(struct {
-		AllClasses map[string]*class.Class `json:"classes"`
-		CurClass   string                  `json:"current"`
-	}{
-		AllClasses: g.allClasses,
-		CurClass:   g.curClass,
-	})
+	return json.Marshal(g)
 }
 
 // UnmarshalJSON un
 // cls must be a pointer of Student struct
 func (g *Grade) UnmarshalJSON(data []byte) error {
-	var tmp struct {
-		AllClasses map[string]*class.Class `json:"classes"`
-		CurClass   string                  `json:"current"`
-	}
+	var tmp Grade
 	if err := json.Unmarshal(data, &tmp); err != nil {
 		fmt.Println("err of UN,", err)
 		return err
 	}
-	g.allClasses = tmp.AllClasses
-	g.curClass = tmp.CurClass
 	return nil
 }
 
