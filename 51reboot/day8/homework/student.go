@@ -2,18 +2,24 @@ package main
 
 import "fmt"
 
+// Student for stu
 type Student struct {
 	Name string
-	Id   int
+	ID   int
 }
 
+// Update for update stu id
 func (s *Student) Update(id int) {
-	s.Id = id
+	s.ID = id
 }
 
 func main() {
 	var f func(int)
-	s := Student{Name: "binggan", Id: 3}
+	// f = Student.Update
+	// error usage as above. ok as below
+	// not use struct, use instance of struct.
+
+	s := Student{Name: "binggan", ID: 3}
 	f = s.Update
 	f(9)
 	fmt.Println(s)
