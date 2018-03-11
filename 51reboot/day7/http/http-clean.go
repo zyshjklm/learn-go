@@ -14,14 +14,19 @@ import (
 
 func repairLink(uri *url.URL, url string) string {
 	if yes := strings.HasPrefix(url, "http"); yes {
+		fmt.Println(uri, "http")
 		return url
 	} else if yes = strings.HasPrefix(url, "//"); yes {
+		fmt.Println(uri, "//")
 		return uri.Scheme + ":" + url
 	} else if yes = strings.HasPrefix(url, "/"); yes {
+		fmt.Println(uri, "/")
 		return uri.Scheme + "://" + uri.Host + url
 	}
-	// /golang-spider/xyz/img.html
+	// golang-spider/xyz/img.html
+	fmt.Println(uri, "relative path:", uri.Path)
 	pathS := strings.Split(uri.Path, "/")
+	fmt.Println(uri, "pathS:", pathS)
 	path := strings.Join(pathS[0:len(pathS)-1], "/") + "/" + url
 	return uri.Scheme + "://" + uri.Host + path
 
