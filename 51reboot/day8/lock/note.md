@@ -12,7 +12,12 @@ go run account-base.go
 go run account-flag.go
 5
 
+#### 使用flag标志变量，存在一些问题：
+# 一个是这个变量本身是可能存在多个人同时修改
+# 另外是等待变量切换状态，如果太频繁则耗资源，形成busy loop，太久则时间不浪费。
+
 # flag变成sync.Mutex. 使用Lock(), Unlock()
+# Mutex是互斥锁。有且只有一个协程能抢到锁。没抢到的则等待，直到锁释放。
 go run account-sync.go
 5
 
@@ -21,7 +26,6 @@ go run account-sync.go
 # 这个结果应该不完全确定。
 go run account-sync-chan.go
 5
-
 ```
 
 wait
@@ -46,6 +50,5 @@ go run account-timeout.go
 5
 go run account-timeout.go
 4
-
 ```
 
