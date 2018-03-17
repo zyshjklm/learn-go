@@ -20,21 +20,37 @@ func printURL(url string) {
 	fmt.Println(url, resp.Status)
 }
 
+func work1(ch chan string) {
+	// work协程从chan中获取url，调用printURL打印
+	for {
+		url, ok := <-ch
+		if !ok {
+			break
+		}
+		fmt.Println("work url:", url)
+		printURL(url)
+	}
+}
+
 func work(ch chan string) {
 	// work协程从chan中获取url，调用printURL打印
-	url := <-ch
-	fmt.Println("work url:", url)
-	printURL(url)
+	for url := range ch {
+		fmt.Println("work url:", url)
+		printURL(url)
+	}
 }
 
 func main() {
 	ch := make(chan string)
-	urls := "http://www.baidu.com"
+	// routine
+	for i := 0; i < 3; i++ {
+		go work(ch)
+	}
+	urls := "http://www.zhihu.com"
 
-	// 主协程启动一个work协程，同时传递一个chan
-	// 主协程向chan里发送url
-	go work(ch)
-	ch <- urls
+	for i := 0; i < 6; i++ {
+		ch <- urls
+	}
+	close(ch)
 	time.Sleep(time.Second * 3)
-	// printURL()
 }
