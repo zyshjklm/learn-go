@@ -35,6 +35,12 @@ func mustReadByte(r *bufio.Reader) byte {
 // readAddr
 ```
 
+惯例：使用must开始命令的函数，一般在有错误时都会发生panic的。
+
+这种方式主要用于解析协议，有任何错误都直接退出。
+
+
+
 
 
 #### 2）ftp 使用LS命令时，如果文件比较多，只得到了部分。因为
@@ -51,5 +57,16 @@ n,err := conn.Read(buf)
 只能对接口进行断言。
 
 51reboot/cryptoSocks5-V1/socks5/socks5.go中，因为使用了mustReadByte函数，需要对recover()的返回值进行断言。
+
+```go
+defer func() {
+    e := recover() // interface{}
+    if e != nil {
+        err = e.(error)
+    }
+}()
+```
+
+e是一个空的interface{}，将其断言为为错误，如果成功，则err是错误类型，如果断言失败。则继续panic。
 
 
