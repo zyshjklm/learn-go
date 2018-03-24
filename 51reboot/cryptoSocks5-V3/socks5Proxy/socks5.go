@@ -11,7 +11,7 @@ import (
 	"net"
 	"sync"
 
-	"github.com/jungle85gopy/learn-go/51reboot/cryptoSocks5-V1/mycrypto"
+	"github.com/jungle85gopy/learn-go/51reboot/cryptoSocks5-V3/mycrypto"
 )
 
 var (
@@ -39,16 +39,16 @@ func handshake(r *bufio.Reader, wr io.Writer) (err error) {
 
 	// version
 	version := mustReadByte(r)
-	log.Printf("version:%d", version)
+	// log.Printf("version:%d", version)
 	if version != 5 {
 		return errors.New("bad version")
 	}
 	// nmethods
 	nmethods := mustReadByte(r)
-	log.Printf("nmethods: %d", nmethods)
+	// log.Printf("nmethods: %d", nmethods)
 	buf := make([]byte, nmethods)
 	io.ReadFull(r, buf)
-	log.Printf("methods type:%v", buf)
+	// log.Printf("methods type:%v", buf)
 	// response
 	resp := []byte{5, 0}
 	_, err = wr.Write(resp[:])
@@ -66,12 +66,12 @@ func readAddr(r *bufio.Reader) (addrPort string, err error) {
 
 	funcName := "readAddr():"
 	version := mustReadByte(r)
-	log.Printf("%s version:%d", funcName, version)
+	// log.Printf("%s version:%d", funcName, version)
 	if version != 5 {
 		return "", errors.New(funcName + " bad version")
 	}
 	cmd := mustReadByte(r)
-	log.Printf("%s cmd:%d", funcName, cmd)
+	// log.Printf("%s cmd:%d", funcName, cmd)
 	if cmd != 1 {
 		return "", errors.New(funcName + " bad cmd")
 	}
@@ -79,7 +79,7 @@ func readAddr(r *bufio.Reader) (addrPort string, err error) {
 	mustReadByte(r)
 	// addr type
 	addrType := mustReadByte(r)
-	log.Printf("%s addrType:%d", funcName, addrType)
+	// log.Printf("%s addrType:%d", funcName, addrType)
 	if addrType != 3 {
 		return "", errors.New(funcName + " bad addr type")
 	}
@@ -87,7 +87,7 @@ func readAddr(r *bufio.Reader) (addrPort string, err error) {
 	addrLen := mustReadByte(r)
 	addr := make([]byte, addrLen)
 	io.ReadFull(r, addr)
-	log.Printf("%s domain len:%d", funcName, addrLen)
+	// log.Printf("%s domain len:%d", funcName, addrLen)
 	log.Printf("%s domain:%s", funcName, addr)
 	// port
 	var port int16
@@ -110,7 +110,7 @@ func socks5Auth(rd *bufio.Reader, wr io.Writer) (addr string, err error) {
 }
 
 func handleConn(conn net.Conn) {
-	log.Println("start handle ...")
+	// log.Println("start handle ...")
 	defer conn.Close()
 
 	// 封装client连接
@@ -145,7 +145,7 @@ func handleConn(conn net.Conn) {
 		io.Copy(clientWr, remote)
 	}()
 	wg.Wait()
-	log.Printf("shut of %s", conn.RemoteAddr().String())
+	// log.Printf("shut of %s", conn.RemoteAddr().String())
 }
 
 func main() {
@@ -162,7 +162,7 @@ func main() {
 			log.Print(err)
 			return
 		}
-		log.Printf("new connection from %s\n\n", conn.RemoteAddr().String())
+		// log.Printf("new connection from %s\n\n", conn.RemoteAddr().String())
 		go handleConn(conn)
 	}
 }

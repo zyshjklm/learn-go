@@ -71,10 +71,16 @@ sockets
 
 ### 面向接口的编程
 
-在传递参数时，要传小接口，而不是大接口。
+在传递参数时，要传小接口，而不是大接口。即最小接口原则。
 比如：
 `func NewCryptoReader(r io.Reader, key string) io.Reader {}`
-上面的r只是需要一个io.Reader，你给一个net.Conn也是可以的。但这样就不能用于基于文件的Reader了。
+上面的r只是需要一个io.Reader，你给一个net.Conn也是可以的。但这样就不能用于基于文件的Reader了。因为net.Conn除了实现Reader以外，还有很多其他参数，而这些参数对于此处来说，是没有用处的。因此只需要一个io.Reader可以了。
+
+```go
+func NewCryptoReader(r net.Conn, key string) io.Reader {}
+```
+
+
 
 
 

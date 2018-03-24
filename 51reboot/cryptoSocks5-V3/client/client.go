@@ -7,7 +7,7 @@ import (
 	"net"
 	"sync"
 
-	"github.com/jungle85gopy/learn-go/51reboot/cryptoSocks5-V1/mycrypto"
+	"github.com/jungle85gopy/learn-go/51reboot/cryptoSocks5-V3/mycrypto"
 )
 
 var (
@@ -34,7 +34,7 @@ func main() {
 }
 
 func handleConn(listenConn net.Conn) {
-	log.Println("start handle ...")
+	// log.Println("start handle ...")
 	defer listenConn.Close()
 
 	remoteConn, err := net.Dial("tcp", *proxy)
@@ -59,5 +59,5 @@ func handleConn(listenConn net.Conn) {
 		io.Copy(listenConn, lRd)
 	}()
 	wg.Wait()
-	log.Printf("shut of listen of %s", listenConn.RemoteAddr().String())
+	// log.Printf("shut of listen of %s", listenConn.RemoteAddr().String())
 }
