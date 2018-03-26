@@ -1,0 +1,10 @@
+trans_addr = "59.110.12.72:6000"
+
+[[user_script]]
+path = "/User/song/user.py" 
+step = "3s"
+
+
+[[user_script]]
+path = "/User/song/redis.py" 
+step = "10s"
