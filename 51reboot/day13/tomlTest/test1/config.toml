@@ -1,0 +1,10 @@
+TransAddr = "59.110.12.72:6000"
+
+[[UserScript]]
+Path = "/User/song/user.py" 
+Step = "3s"
+
+
+[[UserScript]]
+Path = "/User/song/redis.py" 
+Step = "10s"
