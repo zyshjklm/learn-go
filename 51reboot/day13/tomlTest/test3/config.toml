@@ -1,0 +1,13 @@
+[sender]
+trans_addr = "59.110.12.72:6000"
+max_sleep_time = 30
+flush_interval = 5
+buffer_len = 10240
+
+[[user_script]]
+path = "./user.py" 
+step = 3
+
+[[user_script]]
+path = "/User/song/redis.py"
+step = 10
