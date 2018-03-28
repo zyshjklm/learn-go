@@ -4,7 +4,7 @@
 
 ## json encode
 
-
+all code in encode/ path.
 
 refer: https://www.jianshu.com/p/f3c2105bd06b
 
