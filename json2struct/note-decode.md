@@ -84,3 +84,28 @@ main.Account{Email:"rsj217@gmail.com", Password:"123", Money:0}
 
 
 
+### dyn1NewDecode.go 动态解析
+
+使用json.NewDecoder从数据流中构造出一个Decode对象，由这个对应的Decode方法将结果解码到目标结构体。
+
+数据流可以使用strings.NewReader从[]byte数组读取。
+
+```shell
+#go run dyn1NewDecode.go
+2018/03/28 09:43:26 &main.User{UserName:"rsj217@gmail.com", Password:"123"}
+```
+
+
+
+### dyn2Interface.go 动态接口
+
+上一个实例的UserName是使用的邮箱，类型是字符串。但实际的用户账号，可能是邮箱；也可能是手机号，并且是当成一个数字。此时使用interface解析。并根据不同的类型进行断言。
+
+```shell
+#go run dyn2Interface.go
+2018/03/28 22:19:27 &main.User{UserName:"rsj217@gmail.com", Password:"123"}
+2018/03/28 22:19:27 &main.User{UserName:18612349876, Password:"123"}
+```
+
+
+
