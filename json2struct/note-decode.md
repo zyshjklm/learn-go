@@ -128,3 +128,31 @@ type RawMessage []byte
 
 
 
+### undefined1.go 不确定类型
+
+示例主要有2类。分别通过2个结构来进行解析。有些复杂，不建议这样使用。
+
+```shell
+#go run undefined1.go
+i=: 0
+i=: 1
+i=: 2
+i=: 3
+[]main.Person{main.Person{Name:"Alice", Age:37}, main.Person{Name:"Bob", Age:36}}
+[]main.Place{main.Place{City:"Ipoh", Country:"Malaysia"}, main.Place{City:"Northampton", Country:"England"}}
+```
+
+
+
+### undefined2.go 混合类型
+
+对于不确定的类型，使用混合的类型。其思路是借助golang会初始化没有匹配的json，以及抛弃没有匹配的json，给特定的字段赋值。比如上面的例子，有Person时就没有Place，反之亦然。因此直接定义包括两者的结构体。
+
+```shell
+#go run undefined2.go
+[]main.Mixed{main.Mixed{Name:"Alice", Age:37, City:"", Country:""}, main.Mixed{Name:"", Age:0, City:"Ipoh", Country:"Malaysia"}, main.Mixed{Name:"Bob", Age:36, City:"", Country:""}, main.Mixed{Name:"", Age:0, City:"Northampton", Country:"England"}}
+
+[]main.Person{main.Person{Name:"Alice", Age:37}, main.Person{Name:"Bob", Age:36}}
+[]main.Place{main.Place{City:"Ipoh", Country:"Malaysia"}, main.Place{City:"Northampton", Country:"England"}}
+```
+
