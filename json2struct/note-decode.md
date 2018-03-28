@@ -61,3 +61,26 @@ main.Account{Email:"rsj217@gmail.com", Password:"123", Money:100.5}
 main.Account{Email:"rsj217@gmail.com", Password:"123", Money:0}
 ```
 
+
+
+### de4Omit.go 忽略`-`tag
+
+被`-`标识的字段将不被解析，该字段的值被初始化为零值。
+
+```shell
+#go run de4Omit.go
+{Email:rsj217@gmail.com Password:123 Money:0}
+```
+
+
+
+### json-to-go工具
+
+域名：https://mholt.github.io/json-to-go/
+
+示例：
+
+![json-to-go](decode/json2go.png)
+
+
+
