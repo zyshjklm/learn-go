@@ -109,3 +109,22 @@ main.Account{Email:"rsj217@gmail.com", Password:"123", Money:0}
 
 
 
+### dyn3Delay.go 延迟解析
+
+因为UserName的值是在请求被传递到后端时才会用到其具体的类型，因此可以延迟到处理阶段才解析。先将其继续心byte数组的形式存在。即json.RawMessage。
+
+```go
+type RawMessage []byte
+// http://localhost:6060/pkg/encoding/json/#RawMessage
+```
+
+运行效果：
+
+```shell
+#go run dyn3Delay.go
+2018/03/28 22:42:20 &main.User{UserName:json.RawMessage{0x22, 0x72, 0x73, 0x6a, 0x32, 0x31, 0x37, 0x40, 0x67, 0x6d, 0x61, 0x69, 0x6c, 0x2e, 0x63, 0x6f, 0x6d, 0x22}, Password:"123", Email:"rsj217@gmail.com", Phone:0}
+2018/03/28 22:42:20 &main.User{UserName:json.RawMessage{0x31, 0x38, 0x36, 0x31, 0x32, 0x33, 0x34, 0x39, 0x38, 0x37, 0x36}, Password:"123", Email:"", Phone:18612349876}
+```
+
+
+
