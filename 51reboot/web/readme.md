@@ -169,19 +169,47 @@ code: hello/cookie-main.go (这是课上的cookie)
 
 
 
-### mysql driver
+### 6 mysql driver
 
 其中有init会初始化注册一个"mysql".
 使用的是database.sql.Register("mysql", &xxxx)
 
-
-### _方式引用一个包
+`_ "github.com/go-sql-driver/mysql"`方式引用一个包。在main函数之前会被调用一次。
 
 引用一个包而又不用这个包，就可以使用这种方式。
 实际上是使用了这个包中的init函数。
 
+关于driver：
 
-### sqlite3 
+* database/sql中定义是的操作数据库的接口。没有具体实现驱动
+* go-sql-driver/mysql是mysql的一个驱动实现。通过`-`方式引用而执行其init()函数
+* init中完成了将驱动加载全局注册表。其driver.go中的init()就一行:
+* `sql.Register("mysql",&MysqlDriver{})`
+
+mysql常用连接方法：
+
+* 连接：`db, err := sql.Open("mysql", "user:pwd@tcp(IP:3306)/DB")`
+* 读取：http://localhost:6060/pkg/database/sql/#DB.Query
+  * 读取一行：`db.QueryRow("SELECT username FROM users WHERE id=?", id).Scan(&username)`
+  * 读取多行：`rows, _ := db.Query("SELECT * FROM user")`
+
+具体参考：hello/mysql-main.go
+
+
+
+#### 6.1 读写用户账号
+
+参考：
+
+* hello/prepare-main.go
+* hello/add-main.go
+
+功能点：
+
+* 实现Add()函数。将添加的用户插入到数据库。
+* 修改CheckLogin()函数，登陆时读数据库并进行检验。
+
+#### 6.2 sqlite3
 
 ```go
 {
@@ -195,7 +223,7 @@ code: hello/cookie-main.go (这是课上的cookie)
 }
 ```
 
-### checkLogin()
+#### 6.3 checkLogin()
 
 ```shell
 
@@ -203,7 +231,7 @@ code: hello/cookie-main.go (这是课上的cookie)
 curl http://localhost:8090/checkLogin?user=admin&password=admin
 
 ```
-### Add()
+#### 6.4 Add()
 
 usage 
 ```shell
@@ -216,10 +244,9 @@ curl http://localhost:8090/add?name=admin&password=admin&isadmin=0&note=hello,ad
 # Error 1062: Duplicate entry 'admin' for key 'name'
 # 500
 
-
 ```
 
-### msql table
+#### 6.5 msql table
 
 mysql
 
@@ -238,12 +265,20 @@ DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
 AUTO_INCREMENT=6
 ROW_FORMAT=COMPACT
 ;
-
 ```
 
-### 多条记录查询
+#### 6.6 多条记录查询
 
 单条循环会比较慢，可以使用prepare，加快处理速度。
+
+```go
+stmt, err := db.Prepare("INSERT INTO user VALUES(NULL, ?, ?, ?,?)")
+stmt.Exec(name, passwd, note, 1)
+stmt.Exec(name, passwd, note, 1)
+// 每Exec执行一次就插入一行
+```
+
+
 
 
 ### debug pprof
