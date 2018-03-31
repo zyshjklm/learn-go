@@ -41,7 +41,7 @@ code:
 
 
 
-### cookie
+### 4 cookie
 
 code: cookie.go
 
@@ -123,6 +123,49 @@ name:admin,password:admi, login error
 通过浏览器也能观察到跳转效果。
 
 
+
+code: hello/cookie-main.go (这是课上的cookie)
+
+
+
+### 5 session
+
+#### 5.1 hello/session-main.go
+
+使用session。但这个课堂上的代码有点问题，正常登陆后，没有成功跳转到hello页面。
+
+
+
+#### 5.2 hello/session.go
+
+```shell
+# go run hello/session.go
+
+# url -v 'localhost:8090/checkLogin?user=admin&password=admin'
+*   Trying ::1...
+* Connected to localhost (::1) port 8090 (#0)
+> GET /checkLogin?user=admin&password=admin HTTP/1.1
+> Host: localhost:8090
+> User-Agent: curl/7.49.1
+> Accept: */*
+>
+< HTTP/1.1 302 Found
+< Content-Type: text/html; charset=utf-8
+< Location: /hello
+< Set-Cookie: web=MTUyMjQ2NDM3MnxEdi1CQkFFQ180SUFBUkFCRUFBQUlfLUNBQUVHYzNSeWFXNW5EQVlBQkhWelpYSUdjM1J5YVc1bkRBY0FCV0ZrYldsdXxmHKImB7FsH8XDpwdPlQEhVBZoVqVdC6pNmygt2StPJg==; Path=/; Expires=Sat, 31 Mar 2018 02:46:22 GMT; Max-Age=10
+< Date: Sat, 31 Mar 2018 02:46:12 GMT
+< Content-Length: 29
+<
+<a href="/hello">Found</a>.
+
+* Connection #0 to host localhost left intact
+```
+
+从请求返回包头中可以看到如下`Set-Cookie`相关的信息。其中包括名叫web的key及其加密过的值。其后还有其他变量：
+
+* Path=/;
+* Expires=Sat, 31 Mar 2018 02:46:22 GMT;
+* Max-Age=10
 
 
 
