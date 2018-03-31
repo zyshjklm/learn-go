@@ -1,3 +1,98 @@
+## hello golang web
+
+### 1 空服务器
+
+```go
+func main() {
+	log.Fatal(http.ListenAndServe(":8090", nil))
+}
+```
+
+一行代码即可以启动一个空的服务器。并可以运行。只是这个服务器对任何请求都返回404。
+
+### 2 hello
+
+对/hello进行响应。使用**http.HandleFunc**来绑定路由。
+
+代码：hello/hello.go
+
+也可以通过**http.Handle**进行对象的绑定。对象需要实现一个**Handler**的接口，即需要实现**ServeHTTP**函数。
+
+
+
+### 3 账号登陆
+
+code:
+
+- main.go
+- template/list.html.tpl
+- template/list.tpl
+- template/login.tpl
+
+实现过程：
+
+- 先实现一个没有页面的Hello()
+- 实现登陆页面/login，使用Login()，需要用到login.tpl。
+  - 将读取tpl文件并渲染的过程写成render()函数
+- 实现检查表单/checklogin，使用checkLogin()
+  - 通过r.ParseForm()进行解析，并读取账号信息。
+  - 实现跳转功能。`http.Redirect(w, r, "/list", 302)`
+  - 尝试使用http.Cookie记录登陆信息。
+
+
+
+### cookie
+
+code: cookie.go
+
+```shell
+# go run cookie.go &
+
+#### 错误登陆验证
+# curl -v 'localhost:8090/checkLogin?user=admin&password=admi'
+*   Trying ::1...
+* Connected to localhost (::1) port 8090 (#0)
+> GET /checkLogin?user=admin&password=admi HTTP/1.1
+> Host: localhost:8090
+> User-Agent: curl/7.49.1
+> Accept: */*
+>
+< HTTP/1.1 200 OK
+< Date: Sat, 31 Mar 2018 00:32:54 GMT
+< Content-Length: 37
+< Content-Type: text/plain; charset=utf-8
+<
+* Connection #0 to host localhost left intact
+name:admin,password:admi, login error
+
+#### 正确的登陆验证
+
+# curl -v 'localhost:8090/checkLogin?user=admin&password=admin'
+*   Trying ::1...
+* Connected to localhost (::1) port 8090 (#0)
+> GET /checkLogin?user=admin&password=admin HTTP/1.1
+> Host: localhost:8090
+> User-Agent: curl/7.49.1
+> Accept: */*
+>
+< HTTP/1.1 302 Found
+< Content-Type: text/html; charset=utf-8
+< Location: /hello
+< Set-Cookie: user=admin; Max-Age=10
+< Date: Sat, 31 Mar 2018 00:32:45 GMT
+< Content-Length: 29
+<
+<a href="/hello">Found</a>.
+
+* Connection #0 to host localhost left intact
+```
+
+上面的请求，能看到设置的cookie信息：`Set-Cookie: user=admin; Max-Age=10`。但是因为命令行没有记录保存功能。每次请求都是一样的，而且再请求hello页时，看不到有cookie。
+
+下面是用浏览器的观察结果：多次刷新hello页且超过10秒后，相应的cookie就消失了。
+
+![cookie pic](static/cookie.png)
+
 
 
 ### mysql driver
