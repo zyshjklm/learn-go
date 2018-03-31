@@ -280,6 +280,36 @@ stmt.Exec(name, passwd, note, 1)
 
 
 
+### 7 sqlx工具
+
+用`github.com/jmoiron/sqlx`代替sql。
+
+```go
+dbx, err := sqlx.Open("mysql","user:pwd@tcp(localhost):3306/db")
+// multi-line
+var users []User
+dbx.Select(&users, "SELECT * FROM user")
+
+// single
+var user User
+dbx.Get(&user, "SELECT * FROM user")
+
+```
+
+代码参考：hello/add-main.go
+
+
+
+###  8 列表页
+
+实现/list页面。将需要检查是否登陆的功能封装成一个中间件NeedLogin。
+
+参考：main.go
+
+
+
+
+
 
 ### debug pprof
 
