@@ -95,6 +95,37 @@ name:admin,password:admi, login error
 
 
 
+#### cookie跳转
+
+修改Hello()，先检查是否有cookie，如果没有则跳转到/login。
+
+```shell
+
+# curl -v 'localhost:8090/hello'
+*   Trying ::1...
+* Connected to localhost (::1) port 8090 (#0)
+> GET /hello HTTP/1.1
+> Host: localhost:8090
+> User-Agent: curl/7.49.1
+> Accept: */*
+>
+< HTTP/1.1 302 Found
+< Content-Type: text/html; charset=utf-8
+< Location: /login
+< Date: Sat, 31 Mar 2018 00:44:46 GMT
+< Content-Length: 29
+<
+<a href="/login">Found</a>.
+
+* Connection #0 to host localhost left intact
+```
+
+通过浏览器也能观察到跳转效果。
+
+
+
+
+
 ### mysql driver
 
 其中有init会初始化注册一个"mysql".

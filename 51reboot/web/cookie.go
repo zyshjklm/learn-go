@@ -50,6 +50,11 @@ func CheckLogin(w http.ResponseWriter, r *http.Request) {
 // Hello usage:
 // curl localhost:8090/hello
 func Hello(w http.ResponseWriter, r *http.Request) {
+	_, err := r.Cookie("user")
+	if err != nil {
+		http.Redirect(w, r, "/login", 302)
+		return
+	}
 	io.WriteString(w, "hello http\n")
 }
 
