@@ -137,16 +137,15 @@ func main() {
 	// 	log.Fatal(err)
 	// }
 
-	// 声明式挂载
-	http.HandleFunc("/login", Login)
-	http.HandleFunc("/add", NeedLogin(Add))
-	http.HandleFunc("/list", NeedLogin(List))
-	http.HandleFunc("/hello", NeedLogin(Hello))
-	http.HandleFunc("/checkLogin", CheckLogin)
-
 	c := new(counter)
 	http.Handle("/counter", c)
 
-	h := handlers.LoggingHandler(os.Stderr, http.DefaultServeMux)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/login", Login)
+	mux.HandleFunc("/list", NeedLogin(List))
+	mux.HandleFunc("/checkLogin", CheckLogin)
+	mux.Handle("/counter", c)
+
+	h := handlers.LoggingHandler(os.Stderr, mux)
 	log.Fatal(http.ListenAndServe(":8090", h))
 }

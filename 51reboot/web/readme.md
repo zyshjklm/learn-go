@@ -308,14 +308,39 @@ dbx.Get(&user, "SELECT * FROM user")
 
 
 
+### 9 中间件handlers
+
+参考：hello/ServeMux-main.go
+
+#### 9.1 Handler and HandlerFunc
+
+http.HandlerFunc 是函数，使用http.HandleFunc挂载。
+http.Handler是**ServeHTTP**接口，使用http.Handle挂载
+
+#### 9.2 counter
+
+定义一个counter结构。并实现一下ServeHTTP方法。
+
+* c := new(counter)
+* http.Handle("/counter", c)
+
+如下，实现路由绑定。
 
 
 
-### debug pprof
+**转换关系：**
+比如Login()是一个处理函数，如何转换成接口来挂载
+http.HandlerFunc(Login) -> http.Handler
 
-http://localhost:8090/debug/
-http://localhost:8090/debug/pprof/
-http://localhost:8090/debug/pprof/goroutine?debug=1
+
+
+### 10 debug pprof
+
+* http://localhost:8090/debug/
+* http://localhost:8090/debug/pprof/
+* http://localhost:8090/debug/pprof/goroutine?debug=1
+
+其中第一项是404。
 
 ```shell
 
@@ -338,7 +363,6 @@ Showing top 10 nodes out of 12 (cum >= 1.16MB)
          0     0%   100%     1.16MB   100%  net/http/pprof.handler.ServeHTTP
          0     0%   100%     1.16MB   100%  runtime.goexit
 (pprof)
-
 
 ```
 
@@ -400,10 +424,9 @@ Showing top 10 nodes out of 14 (cum >= 10ms)
          0     0%   100%       10ms 50.00%  runtime.stopm
          0     0%   100%       10ms 50.00%  runtime.systemstack
 (pprof)
-
 ```
 
-### 路由分发器
+### 11 路由分发器
 
 ServeMux
 DefauleServeMux
@@ -416,9 +439,16 @@ DefauleServeMux
 	h := handlers.LoggingHandler(os.Stderr, http.DefaultServeMux)
 	log.Fatal(http.ListenAndServe(":8090", h))
 
+	// style 3
+	mux := http.NewServeMux()
+	mux.Handle("/counter", c)
 ```
 
-### Handler and HandlerFunc
+参考：hello/ServeMux-main2.go
+
+
+
+### 12 Handler and HandlerFunc
 
 http.HandlerFunc 是函数，使用http.HandleFunc挂载。
 http.Handler是接口，使用http.Handle挂载
