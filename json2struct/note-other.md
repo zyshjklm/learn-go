@@ -76,3 +76,13 @@ main.LogEntry{ID:12345, Name:"Test Document", Payload:main.LogPayload{Message:"t
 main.LogPayload{Message:"test"}
 ```
 
+
+
+### json处理技巧
+
+参考翻译文章：https://zhuanlan.zhihu.com/p/27472716
+
+其中部分使用了json兼容的三方库：github.com/json-iterator/go
+
+该库比官方库有更高的性能。
+
