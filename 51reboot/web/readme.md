@@ -468,3 +468,38 @@ http.HandlerFunc(Login) -> http.Handler
 
 /counter请求的处理函数是counter对象，该对象封装了Logging日志处理。
 
+
+
+### 13 提供用户API
+
+代码：main.go
+
+通过API响应用户的数据。需要定义一个Users及一个响应体结构。
+
+* 用户User结构体
+  * Password不能在json, xml中显示
+  * 处理函数Users(w http.ResponseWriter, r *http.Request)
+  * http.HandleFunc("/users", Users)
+* Response响应体
+  * 被Users函数使用
+
+
+
+### 14 静态文件服务器 
+
+通过http.FileServer提供静态文件服务器
+
+- http.Handle("/static/", http.FileServer(http.Dir(".")))
+
+参考：
+
+* main.go
+* hello/fileserver.go
+
+使用：
+
+```shell
+go run hello/fileserver.go
+# 在浏览器直接访问
+```
+

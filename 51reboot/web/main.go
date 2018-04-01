@@ -68,6 +68,30 @@ func Users(w http.ResponseWriter, r *http.Request) {
 	w.Write(buf)
 }
 
+type counter struct {
+	h     http.Handler
+	count map[string]int
+}
+
+// NewCounter new a counter with Handler
+func NewCounter(h http.Handler) *counter {
+	return &counter{
+		h:     h,
+		count: make(map[string]int),
+	}
+}
+
+func (c *counter) GetCounter(w http.ResponseWriter, r *http.Request) {
+	for path, count := range c.count {
+		fmt.Fprintf(w, "%s\t%d\n", path, count)
+	}
+}
+
+func (c *counter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	c.count[r.URL.Path]++
+	c.h.ServeHTTP(w, r)
+}
+
 func render(w http.ResponseWriter, name string, data interface{}) {
 	tplFile := filepath.Join("template", name+".tpl")
 	tpl, err := template.ParseFiles(tplFile)
@@ -156,15 +180,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	var err error
-	db, err = sqlx.Open("mysql", "golang:golang@tcp(59.110.12.72:3306)/go")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// 	var err error
+	// 	db, err = sqlx.Open("mysql", "golang:golang@tcp(59.110.12.72:3306)/go")
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 	}
+	// 	err = db.Ping()
+	// 	if err != nil {
+	// 		log.Fatal(err)
+	// 	}
 
 	// http.HandlerFunc -> func,  -> use http.HandleFunc to mount
 	// http.Handler -> interface, -> use http.Handle to mount
