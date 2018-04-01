@@ -19,6 +19,8 @@ import (
 
 var (
 	db *sqlx.DB
+	_  http.Handler = &counter{}
+	// 进行编译检查，证明counter实现了Handler接口。
 )
 
 // User for sql row
@@ -28,6 +30,28 @@ type User struct {
 	Password string `json:"-" xml:"-"`
 	Note     string `json:"note"`
 	Isadmin  bool   `json:"isadmin"`
+}
+type counter struct {
+	h     http.Handler
+	count map[string]int
+}
+
+// NewCounter new a counter with Handler
+func NewCounter(h http.Handler) *counter {
+	return &counter{
+		h:     h,
+		count: make(map[string]int),
+	}
+}
+
+func (c *counter) GetCounter(w http.ResponseWriter, r *http.Request) {
+	for path, count := range c.count {
+		fmt.Fprintf(w, "%s\t%d\n", path, count)
+	}
+}
+func (c *counter) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	c.count[r.URL.Path]++
+	c.h.ServeHTTP(w, r)
 }
 
 func render(w http.ResponseWriter, name string, data interface{}) {
@@ -118,15 +142,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	var err error
-	db, err = sqlx.Open("mysql", "golang:golang@tcp(59.110.12.72:3306)/go")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = db.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// var err error
+	// db, err = sqlx.Open("mysql", "golang:golang@tcp(59.110.12.72:3306)/go")
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// err = db.Ping()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	// http.HandlerFunc -> func,  -> use http.HandleFunc to mount
 	// http.Handler -> interface, -> use http.Handle to mount
@@ -137,7 +161,7 @@ func main() {
 	loginCounter := NewCounter(http.HandlerFunc(Login))
 	http.Handle("/login", loginCounter)
 	http.HandleFunc("/loginCounter", loginCounter.GetCounter)
-
+	// 专属counter
 	http.HandleFunc("/add", NeedLogin(Add))
 	http.HandleFunc("/list", NeedLogin(List))
 	http.HandleFunc("/hello", NeedLogin(Hello))
@@ -146,6 +170,7 @@ func main() {
 	h := handlers.LoggingHandler(os.Stderr, http.DefaultServeMux)
 	c := NewCounter(h)
 	http.HandleFunc("/counter", c.GetCounter)
+	// 全局counter
 
 	log.Fatal(http.ListenAndServe(":8090", c))
 	// 对于一个/login请求，会被多次中间件封装：

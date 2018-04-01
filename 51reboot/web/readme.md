@@ -457,4 +457,14 @@ http.Handler是接口，使用http.Handle挂载
 比如Login()是一个处理函数，如何转换成接口来挂载
 http.HandlerFunc(Login) -> http.Handler
 
+#### 12.1 counter
+
+定义一个counter结构体，包括Handler及一个map计算器。
+
+* ServeHTTP先进行一次URI的计数，再调用底层Handler
+* GetCounter返回所有URI的计算信息。
+
+对于/login请求，被封装了一层counter。并使用Handle进行挂载。
+
+/counter请求的处理函数是counter对象，该对象封装了Logging日志处理。
 
