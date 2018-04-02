@@ -7,14 +7,14 @@ import (
 
 type SliceHeader struct {
 	Data unsafe.Pointer
-	Len  int64
-	Cap  int64
+	Len  int
+	Cap  int
 }
 
 func main() {
 	// data pointer
-	// len int64 长度
-	// cap int64 总容量
+	// len int 长度
+	// cap int 总容量
 
 	s := []int{1, 2, 3}
 	fmt.Println(&s[0])

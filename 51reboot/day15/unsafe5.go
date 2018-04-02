@@ -7,8 +7,8 @@ import (
 
 type SliceHeader struct {
 	Data unsafe.Pointer
-	Len  int64
-	Cap  int64
+	Len  int
+	Cap  int
 }
 
 func main() {
@@ -51,8 +51,8 @@ func main() {
 func slice(s []int, b int, len int) []int {
 	hdr := SliceHeader{
 		Data: unsafe.Pointer(&s[b]),
-		Len:  int64(len),
-		Cap:  int64(cap(s)),
+		Len:  int(len),
+		Cap:  int(cap(s)),
 	}
 	s1 := *(*[]int)(unsafe.Pointer(&hdr))
 	return s1
