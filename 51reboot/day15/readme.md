@@ -192,3 +192,34 @@ common中定义的两个结构，分别用来进行做为请求参数和返回�
 
 client在调用时，通过`服务.方法`的方式来调用。即示例中的`MathService.Add`
 
+
+
+### 6 protobuf
+
+建议使用v3版本。在linux里，默认的可能是v2。所以考虑用源码进行安装。相关步骤：
+
+* 安装protoc
+  * 地址：https://github.com/google/protobuf/releases
+  * 下载：[v3.5.0](https://github.com/google/protobuf/releases/download/v3.5.0/protoc-3.5.0-osx-x86_64.zip)
+  * 解压：`unzip protoc-3.5.0-osx-x86_64.zip`
+  * 得到：`{bin/protoc, include/}`
+* 安装工具：
+  * go get -v github.com/gogo/protobuf/proto
+  * go get -v github.com/golang/protobuf/protoc-gen-go
+* 定义proto
+  * 编写**myproto/addressbook.proto**。这个是模板原型。
+  * repeated相当于是golang里的slice。
+* 生成pb
+
+```shell
+# bin/protoc --go_out=. myproto/addressbook.proto
+
+# ls -trl myproto
+-rw-r--r--  1 song  staff   347 Apr  6 23:36 addressbook.proto
+-rw-r--r--  1 song  staff  5424 Apr  6 23:36 addressbook.pb.go
+
+# vim encode.go
+
+# go run encode.go > jungle.pb
+```
+
