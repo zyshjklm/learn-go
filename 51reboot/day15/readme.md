@@ -196,6 +196,8 @@ client在调用时，通过`服务.方法`的方式来调用。即示例中的`M
 
 ### 6 protobuf
 
+#### 6.1 编码
+
 建议使用v3版本。在linux里，默认的可能是v2。所以考虑用源码进行安装。相关步骤：
 
 * 安装protoc
@@ -223,3 +225,50 @@ client在调用时，通过`服务.方法`的方式来调用。即示例中的`M
 # go run encode.go > jungle.pb
 ```
 
+#### 6.2 解码
+
+```shell
+# go run encode.go > jungle.pb
+
+# go run decode.go < jungle.pb
+{1 jungle jungle@github.com [number:"18612349876"  number:"87651234" type:HOME ]}
+id:1 name:"jungle" email:"jungle@github.com" phones:<number:"18612349876" > phones:<number:"87651234" type:HOME >
+
+```
+
+
+
+#### 6.3 bench测试
+
+比较proto与json的编码速度
+
+```shell
+# vim encode_test.go
+
+# go test -bench .
+# github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf
+./encode.go:10:6: main redeclared in this block
+	previous declaration at ./decode.go:12:6
+FAIL	github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf [build failed]
+
+##### 因为decode.go与encode.go在同一个目录下，且都是main。分开放到不同目录
+
+# mkdir encode decode
+# git mv encode.go encode
+# mv encode_test.go encode
+
+# mv decode.go decode
+
+# cd encode
+# go test -bench .
+goos: darwin
+goarch: amd64
+pkg: github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf/encode
+BenchmarkProto-4   	 2000000	       705 ns/op
+BenchmarkJSON-4    	 1000000	      1465 ns/op
+PASS
+ok  	github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf/encode	3.640s
+
+```
+
+proto大概是json的2倍，如果数据再复杂些，量再多些，应该会差异更大。
