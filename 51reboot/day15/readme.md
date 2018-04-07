@@ -277,3 +277,48 @@ ok  	github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf/encode	3.640s
 
 proto大概是json的2倍，如果数据再复杂些，量再多些，应该会差异更大。
 
+
+
+
+
+### 7 grpc
+
+#### 7.1 生成pb代码
+
+```shell
+go get -v google.golang.org/grpc
+
+mkdir rpcrpto
+vim rpcproto/addrbookstore.proto
+#### 在proto/addrbook.proto 基础上增加了rpc相关message，记得改包名。
+
+#### 通过bin/protoc自动生成rpc代码，已经写到rpcproto/compile.sh脚本。
+cd rpcproto
+bash -x ./compile.sh
++ ~/jungleCode/bin/protoc --go_out=plugins=grpc:. addrbookstore.proto
+
+# ls -trl
+total 24
+-rw-r--r--  1 song  staff  9319 Apr  7 10:50 addrbookstore.pb.go
+-rw-r--r--  1 song  staff   568 Apr  7 10:50 addrbookstore.proto
+
+```
+
+编译时，则`--go_out=.`变成了`--go_out=plugins=grpc:.`。
+
+
+
+注意几个工具：
+
+- github.com/google/protobuf/releases/download/v3.5.0/protoc-3.5.0-osx-x86_64.zip
+  - 官网的工具：protoc用于生成protobuf的代码。
+- go get -v github.com/golang/protobuf/protoc-gen-go
+  - golang版本的pb插件工具，proto原型，2千多star
+  - 生成的是`jungleCode/bin/protoc-gen-go`工具
+  - protoc生成的xxx.pb.go代码是会引用该库的proto包。
+
+
+- go get -v github.com/gogo/protobuf/protoc-gen-gogo
+  - 是对golang/protobuf的分支，1千多star
+  - 生成的是`jungleCode/bin/protoc-gen-gogo`工具
+
