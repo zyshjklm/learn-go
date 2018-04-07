@@ -192,6 +192,8 @@ common中定义的两个结构，分别用来进行做为请求参数和返回�
 
 client在调用时，通过`服务.方法`的方式来调用。即示例中的`MathService.Add`
 
+rpc封装了底层的通信协议和传输过程。像调用`本地函数`一样调用网络服务。
+
 
 
 ### 6 protobuf
@@ -205,11 +207,13 @@ client在调用时，通过`服务.方法`的方式来调用。即示例中的`M
   * 下载：[v3.5.0](https://github.com/google/protobuf/releases/download/v3.5.0/protoc-3.5.0-osx-x86_64.zip)
   * 解压：`unzip protoc-3.5.0-osx-x86_64.zip`
   * 得到：`{bin/protoc, include/}`
-* 安装工具：
+* 安装go的插件工具：
   * go get -v github.com/gogo/protobuf/proto
   * go get -v github.com/golang/protobuf/protoc-gen-go
 * 定义proto
   * 编写**myproto/addressbook.proto**。这个是模板原型。
+  * 类似于数据库中的表结构。类似于golang中的struct。
+  * pb支持向下兼容，新增加的字段在老的接口中也能使用。
   * repeated相当于是golang里的slice。
 * 生成pb
 
@@ -272,3 +276,4 @@ ok  	github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf/encode	3.640s
 ```
 
 proto大概是json的2倍，如果数据再复杂些，量再多些，应该会差异更大。
+
