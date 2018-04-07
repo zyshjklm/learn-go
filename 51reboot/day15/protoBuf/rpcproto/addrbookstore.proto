@@ -37,6 +37,3 @@ service AddrBookStore {
     rpc AddPerson(AddPersonRequest) returns(AddPersonResponse);
 }
 
-cd ..
-mkdir rpcserver
-vim rpcserver/main.go

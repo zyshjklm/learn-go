@@ -322,3 +322,54 @@ total 24
   - 是对golang/protobuf的分支，1千多star
   - 生成的是`jungleCode/bin/protoc-gen-gogo`工具
 
+
+
+#### 7.2 grpc server and client
+
+```shell
+### protoBuf path
+
+mkdir rpcserver
+vim rpcserver/main.go
+
+mkdir rpcclient
+vim rpcclient/main.go
+
+### run
+
+```
+
+server
+
+```shell
+# go run rpcserver/main.go
+2018/04/07 18:36:18 add call:[person:id:1 name:"jungle85" email:"jungle85@github.com" phones:<number:"13812345678" > ], [phones:[number:"13812345678" ]]
+2018/04/07 18:36:26 add call:[person:id:1 name:"jungle85" email:"jungle85@github.com" phones:<number:"13812345678" > ], [phones:[number:"13812345678" ]]
+2018/04/07 18:36:28 add call:[person:id:1 name:"jungle85" email:"jungle85@github.com" phones:<number:"13812345678" > ], [phones:[number:"13812345678" ]]
+^Csignal: interrupt
+```
+
+client
+
+```shell
+# go run rpcclient/main.go
+2018/04/07 18:36:18 1
+
+# go run rpcclient/main.go
+2018/04/07 18:36:26 2
+
+# go run rpcclient/main.go
+2018/04/07 18:36:28 3
+```
+
+grpc基于http2，可以在nginx中使用。也是微服务通信的重要协议。
+
+使用微服务，需要有较好的基础设施：
+
+* 部署，监控，日志收集等
+* 服务发现
+* 服务通信，是grpc和protobuf解决的问题。
+  * grpc.io
+  * pb文件就是协议与接口文档，而且跨语言。
+  * 调用rpc时，不需要关注底层的实现。只需要关注对端的协议和端口即可。
+  * 支持服务发现。
