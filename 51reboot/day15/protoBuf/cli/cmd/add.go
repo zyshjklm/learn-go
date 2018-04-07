@@ -15,23 +15,49 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"log"
+	"strconv"
 
+	"github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf/rpcproto3"
 	"github.com/spf13/cobra"
 )
 
 // addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "add Id Name Email Mobile",
+	Long: `add Person info into address book store.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Only support one Mobile.
+segment order: Id Name Email Mobile`,
+
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("add called")
+		fmt.Println("add called, args:", args)
+
+		var phones []*rpcproto.PhoneNumber
+		id, _ := strconv.Atoi(args[0])
+		phone := &rpcproto.PhoneNumber{
+			Number: args[3],
+			Type:   rpcproto.PhoneType_MOBILE,
+		}
+		phones = append(phones, phone)
+		req := &rpcproto.AddPersonRequest{
+			Person: &rpcproto.Person{
+				Id:     int32(id),
+				Name:   args[1],
+				Email:  args[2],
+				Phones: phones,
+			},
+		}
+
+		client := newClient("127.0.0.1:8021")
+		resp, err := client.AddPerson(context.TODO(), req)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("add ok, id:", resp.GetId())
 	},
 }
 

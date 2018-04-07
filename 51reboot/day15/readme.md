@@ -669,3 +669,55 @@ Global Flags:
 
 
 
+#### 8.3 完善grpc功能
+
+client cli
+
+```shell
+pwd
+### cli
+
+cd cmd
+cp  ../../../protoBuf/rpcclient3/main.go grpc.go
+
+vim grpc.go
+# 将包名由main改成cmd
+# 将main()改成newClient()函数。根据addr地址返回一个rpcproto的Client连接
+# 	通过grpc.Dial获取连接conn
+#	用电话本的Client封装conn，并返回
+#	其余对struct的处理，转移到add.go
+
+vim add.go
+# 修改Run: func(cmd *cobra.Command, args []string)函数。
+# 接收参数，并封装成一个人的个人信息，提交到grpc
+
+```
+
+启动服务
+
+```shell
+##### server
+# cd ../../
+# go run rpcserver3/main.go
+2018/04/07 22:30:49 add call:[person:id:1 name:"jungle" email:"jungle@163.com" phones:<number:"13822221111" > ], [phones:[number:"13822221111" ]]
+2018/04/07 22:30:52 add call:[person:id:1 name:"jungle" email:"jungle@163.com" phones:<number:"13822221112" > ], [phones:[number:"13822221112" ]]
+2018/04/07 22:30:54 add call:[person:id:1 name:"jungle" email:"jungle@163.com" phones:<number:"13822221113" > ], [phones:[number:"13822221113" ]]
+
+
+##### client at day15/protoBuf/cli
+# pwd
+
+# go build
+# ./cli add 1 jungle jungle@163.com 13822221111
+add called, args: [1 jungle jungle@163.com 13822221111]
+add ok, id: 1
+
+# ./cli add 1 jungle jungle@163.com 13822221112
+add called, args: [1 jungle jungle@163.com 13822221112]
+add ok, id: 2
+
+# ./cli add 1 jungle jungle@163.com 13822221113
+add called, args: [1 jungle jungle@163.com 13822221113]
+add ok, id: 3
+```
+
