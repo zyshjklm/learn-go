@@ -373,3 +373,93 @@ grpc基于http2，可以在nginx中使用。也是微服务通信的重要协议
   * pb文件就是协议与接口文档，而且跨语言。
   * 调用rpc时，不需要关注底层的实现。只需要关注对端的协议和端口即可。
   * 支持服务发现。
+
+#### 7.3 use gogo/protobuf
+
+尝试使用github.com/gogo/protobuf库。如前面说明，这是github.com/golang/protobuf的分支。protoc默认使用的是github.com/golang/protobuf。
+
+先尝试修改pb.go文件。
+
+```shell
+### 复制文件
+mkdir rpcproto2 rpcserver2 rpcclient2
+cp rpcproto/* rpcproto2/
+cp rpcserver/main.go rpcserver2/
+cp rpcclient/main.go rpcclient2/
+
+# rpcproto2下的包，还是保持包名称是rpcproto
+md5 rpcproto*/addrbookstore.proto
+MD5 (rpcproto/addrbookstore.proto) = c13c5c0290b08eab1272329f96f2a9d8
+MD5 (rpcproto2/addrbookstore.proto) = c13c5c0290b08eab1272329f96f2a9d8
+
+cd rpcproto2
+bash compile.sh
+cd -
+md5 rpcproto*/addrbookstore.pb.go
+MD5 (rpcproto/addrbookstore.pb.go) = d4f1375e201742eaa5019be1d7bfb4d3
+MD5 (rpcproto2/addrbookstore.pb.go) = d4f1375e201742eaa5019be1d7bfb4d3
+
+## 手动修改pb.go文件
+vim rpcproto2/addrbookstore.pb.go
+
+diff rpcproto*/addrbookstore.pb.go
+< import proto "github.com/golang/protobuf/proto"
+---
+> import proto "github.com/gogo/protobuf/proto"
+24c24,25
+< 	context "golang.org/x/net/context"
+---
+> 	"context"
+>
+37c38
+< const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+---
+> // const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
+```
+
+修改程序
+
+```shell
+
+# 修改server
+vim rpcserver2/main.go
+diff rpcserver*/main.go
+3a4
+> 	"context"
+8c9
+< 	"golang.org/x/net/context"
+---
+> 	"github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf/rpcproto2"
+11,12d11
+<
+< 	"github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf/rpcproto"
+
+# 修改client
+vim  rpcclient2/main.go
+diff rpcclient*/main.go
+3a4
+> 	"context"
+6,8c7
+< 	"golang.org/x/net/context"
+<
+< 	"github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf/rpcproto"
+---
+> 	"github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf/rpcproto2"
+```
+
+运行
+
+```shell
+# go run rpcserver2/main.go
+2018/04/07 19:12:01 add call:[person:id:1 name:"jungle85" email:"jungle85@github.com" phones:<number:"13812345678" type:MOBILE > ], [phones:[number:"13812345678" type:MOBILE ]]
+2018/04/07 19:12:03 add call:[person:id:1 name:"jungle85" email:"jungle85@github.com" phones:<number:"13812345678" type:MOBILE > ], [phones:[number:"13812345678" type:MOBILE ]]
+
+# go run rpcclient2/main.go
+2018/04/07 19:12:01 1
+
+# go run rpcclient2/main.go
+2018/04/07 19:12:03 2
+```
+
+效果和7.2中的结果一样。
+
