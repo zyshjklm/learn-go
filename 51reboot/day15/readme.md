@@ -463,3 +463,78 @@ diff rpcclient*/main.go
 
 效果和7.2中的结果一样。
 
+
+
+### 7.4 proto-gen-gofast
+
+准备环境
+
+```shell
+cp -r rpcserver2 rpcserver3
+cp -r rpcclient2 rpcclient3
+
+mkdir rpcproto3
+cp -r rpcproto2/addrbookstore.proto rpcproto3
+
+### 参考：https://github.com/gogo/protobuf
+go get -v github.com/gogo/protobuf/proto
+go get -v github.com/gogo/protobuf/protoc-gen-gofast
+
+## gen
+cd rpcproto3
+time ~/jungleCode/bin/protoc  --gofast_out=plugins=grpc:. addrbookstore.proto
+~/jungleCode/bin/protoc --gofast_out=plugins=grpc:. addrbookstore.proto  0.03s user 0.02s system 52% cpu 0.104 total
+
+ls -lh
+total 64
+-rw-r--r--  1 song  staff    27K Apr  7 19:31 addrbookstore.pb.go
+-rw-r--r--  1 song  staff   568B Apr  7 19:23 addrbookstore.proto
+
+cd -
+```
+
+修改程序
+
+```shell
+vim rpcclient3/main.go
+vim rpcserver3/main.go
+
+diff rpcclient[23]/main.go
+7c7
+< 	"github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf/rpcproto2"
+---
+> 	"github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf/rpcproto3"
+
+diff rpcserver[23]/main.go
+9c9
+< 	"github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf/rpcproto2"
+---
+> 	"github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf/rpcproto3"
+```
+
+运行
+
+```shell
+### server
+go run rpcserver3/main.go
+2018/04/07 19:35:46 add call:[person:id:1 name:"jungle85" email:"jungle85@github.com" phones:<number:"13812345678" > ], [phones:[number:"13812345678" ]]
+2018/04/07 19:35:48 add call:[person:id:1 name:"jungle85" email:"jungle85@github.com" phones:<number:"13812345678" > ], [phones:[number:"13812345678" ]]
+
+### client
+go run rpcclient3/main.go
+2018/04/07 19:35:46 1
+
+go run rpcclient3/main.go
+2018/04/07 19:35:48 2
+```
+
+需要注意的是，使用fast生成的xx.pb.go代码更长
+
+```shell
+ls -l rpcproto*/addrbookstore.pb.go
+-rw-r--r--  1 song  staff   9319 Apr  7 17:38 rpcproto/addrbookstore.pb.go
+-rw-r--r--  1 song  staff   9296 Apr  7 19:13 rpcproto2/addrbookstore.pb.go
+-rw-r--r--  1 song  staff  27483 Apr  7 19:31 rpcproto3/addrbookstore.pb.go
+
+```
+
