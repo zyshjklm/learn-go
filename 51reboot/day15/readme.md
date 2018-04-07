@@ -538,3 +538,134 @@ ls -l rpcproto*/addrbookstore.pb.go
 
 ```
 
+
+
+### 8 cobra
+
+cli工具
+
+#### 8.1 cobra pkg
+
+```shell
+# go get -v github.com/spf13/cobra
+github.com/spf13/pflag
+github.com/spf13/cobra
+
+# go get -v github.com/spf13/cobra/cobra
+github.com/hashicorp/hcl/hcl/strconv
+github.com/mitchellh/go-homedir
+github.com/fsnotify/fsnotify
+github.com/hashicorp/hcl/hcl/token
+github.com/hashicorp/hcl/hcl/ast
+github.com/hashicorp/hcl/hcl/scanner
+github.com/hashicorp/hcl/json/token
+github.com/hashicorp/hcl/json/scanner
+github.com/mitchellh/mapstructure
+github.com/hashicorp/hcl/hcl/parser
+github.com/magiconair/properties
+github.com/pelletier/go-toml
+github.com/hashicorp/hcl/json/parser
+github.com/hashicorp/hcl
+github.com/spf13/afero/mem
+github.com/spf13/afero
+github.com/spf13/cast
+github.com/spf13/jwalterweatherman
+gopkg.in/yaml.v2
+github.com/spf13/viper
+github.com/spf13/cobra/cobra/cmd
+github.com/spf13/cobra/cobra
+```
+
+cobra作者是spf13，写了些好用的工具，后加入google golang团队。
+
+* [golang/go](https://github.com/golang/go) 40k star
+* [gohugoio/hugo](https://github.com/gohugoio/hugo) 25k star。framework for building websites. 静态网页
+* [spf13-vim](https://github.com/spf13/spf13-vim) 12k star。The ultimate vim distribution
+* [cobra](https://github.com/spf13/cobra) 7k star。powerful modern CLI interfaces similar to git & go tools.
+* [viper](https://github.com/spf13/viper) 5k star。golang 配置管理工具，支持json, toml, yaml等
+
+cobra引用了一些github.com/mitchellh的包。这也是个牛人。这个人在一个高产的组织：
+
+* https://github.com/hashicorp 
+
+上面的cobra就引用了一些hashicorp的包。他们的明显项目：
+
+* [vagrant](https://github.com/hashicorp/vagrant) 16k star的虚拟开发环境工具。
+* [consul](https://github.com/hashicorp/consul) 
+
+
+
+#### 8.2 生成命令框架
+
+实现一个cli工具，用于前面的grpc的client端。
+
+```shell
+pwd
+# 51reboot/day15/protoBuf/
+mkdir cli
+cd cli
+## 下载好前面提交的工具：
+# github.com/spf13/cobra
+# github.com/spf13/cobra/cobra
+```
+
+生成命令工具
+
+```shell
+# ls ### cli 空目录
+
+# cobra init
+Your Cobra application is ready at
+/Users/song/jungleCode/src/github.com/jungle85gopy/learn-go/51reboot/day15/protoBuf/cli.
+
+Give it a try by going there and running `go run main.go`.
+Add commands to it by running `cobra add [cmdname]`.
+
+# ls
+LICENSE cmd     main.go
+# ls cmd
+root.go
+
+# go install
+# cli
+# cli help
+# cli --help
+#### 可以执行如上命令观察。
+
+
+cobra add add
+add created at cmd/add.go
+
+# cobra add query
+query created at cmd/query.go
+
+# cobra add dump
+dump created at cmd/dump.go
+
+# ls cmd
+add.go   dump.go  query.go root.go
+
+# go install
+# cli help
+Usage:
+  cli [command]
+
+Available Commands:
+  add         A brief description of your command
+  dump        A brief description of your command
+  help        Help about any command
+  query       A brief description of your command
+
+# cli help add
+Usage:
+  cli add [flags]
+
+Flags:
+  -h, --help   help for add
+
+Global Flags:
+      --config string   config file (default is $HOME/.cli.yaml)
+```
+
+
+
