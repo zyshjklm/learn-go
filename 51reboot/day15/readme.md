@@ -749,3 +749,20 @@ govendor将所依赖的文件全部同步到vendor目录，别人下载后，直
 版本及依赖管理另外单独学习。
 
 
+
+### 10 mail
+
+github.com/go-gomail/gomail是一个三方包。
+
+裸写发送邮件。
+
+```shell
+go run mail.go
+# sendmail: fatal: No recipient addresses found in message header
+# 在mac下有些问题。
+```
+
+不过关于发邮件。我近期单独做过一个调研。
+
+参考：https://github.com/jkak/mail-proxy
+
