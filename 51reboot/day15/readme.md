@@ -812,3 +812,30 @@ Finished
 
 模拟偶尔出来的请求超时。
 
+
+
+获取请求头中的k/v
+
+server:
+
+```shell
+# go run ctx/req-kv.go
+```
+
+client
+
+```shell
+# curl localhost:8022
+Request ID:  0
+
+# curl localhost:8022 -H "X-Request-ID: 12"
+Request ID:  12
+
+# curl localhost:8022 -H "X-Request-ID: 123"
+Request ID:  123
+```
+
+
+
+
+
