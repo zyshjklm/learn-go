@@ -837,5 +837,65 @@ Request ID:  123
 
 
 
+refer2: https://www.jianshu.com/p/d24bf8b6c869
 
+
+
+cancel
+
+```shell
+# go run ctx/cancel.go
+22:56:44 work
+22:56:45 work
+22:56:46 work
+22:56:47 work
+22:56:48 work
+22:56:48 down
+
+```
+
+
+
+deadline
+
+```shell
+# go run ctx/deadline.go
+23:02:58 work
+23:02:59 work
+23:03:00 work
+23:03:01 work
+23:03:02 done
+23:03:07 down
+```
+
+注意最后两行的时间差。运行5秒后Deadline生效，work结束，但Handler还在运行。等到10秒后取消ctx。Handler结束。整个程序也结束。
+
+timeout
+
+```shell
+# go run timeout.go
+23:09:25 work
+23:09:26 work
+23:09:27 work
+23:09:28 work
+23:09:29 done
+23:09:34 down
+```
+
+timeout err
+
+```shell
+go run timeoutStuff.go
+23:13:28 deadline set
+23:13:28 work
+23:13:29 deadline set
+23:13:29 work
+23:13:30 deadline set
+23:13:30 work
+23:13:31 deadline set
+23:13:31 work
+23:13:32 deadline set
+23:13:32 context deadline exceeded
+23:13:37 down
+```
 
