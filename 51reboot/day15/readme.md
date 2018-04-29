@@ -690,7 +690,6 @@ vim grpc.go
 vim add.go
 # 修改Run: func(cmd *cobra.Command, args []string)函数。
 # 接收参数，并封装成一个人的个人信息，提交到grpc
-
 ```
 
 启动服务
@@ -720,4 +719,33 @@ add ok, id: 2
 add called, args: [1 jungle jungle@163.com 13822221113]
 add ok, id: 3
 ```
+
+
+
+### 9 govender
+
+vendor提供一个版本冻结的工具。go优先使用本地的vendor目录。
+
+示例工具：
+
+* github.com/kardianos/govendor
+
+```shell
+### download
+go get -v github.com/kardianos/govendor
+
+### usage
+# under some project
+govender init
+
+govender add +external
+ls vender
+```
+
+其他使用需要看命令参数。
+
+govendor将所依赖的文件全部同步到vendor目录，别人下载后，直接就可以`go build`了。
+
+版本及依赖管理另外单独学习。
+
 
