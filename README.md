@@ -26,3 +26,11 @@ read blogs from web: from_blog path.
 
 2016-10-06
 
+## 51reboot
+
+2017-08 -> 10 training.
+
+2018-02 -> 04 practise and review again.
+
+
+
