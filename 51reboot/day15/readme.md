@@ -766,3 +766,49 @@ go run mail.go
 
 参考：https://github.com/jkak/mail-proxy
 
+
+
+### 11 context
+
+Package context defines the Context type, which carries deadlines, cancelation signals, and other request-scoped values across API boundaries and between processes.
+
+这部分讲得比较初略。从网上找了些教程。
+
+
+
+refer: https://yq.aliyun.com/articles/69662
+
+lazy-server.go
+
+```shell
+# go run ctx/lazy-server.go
+quick response, 1
+quick response, 1
+quick response, 1
+quick response, 1
+slow response, 0
+^Csignal: interrupt
+```
+
+lazy-client.go
+
+```shell
+# go run ctx/lazy-client.go
+Server Response: quick response, 1
+Finished
+# go run ctx/lazy-client.go
+Server Response: quick response, 1
+Finished
+# go run ctx/lazy-client.go
+Server Response: quick response, 1
+Finished
+# go run ctx/lazy-client.go
+Server Response: quick response, 1
+Finished
+# go run ctx/lazy-client.go
+Timeout!
+Finished
+```
+
+模拟偶尔出来的请求超时。
+
