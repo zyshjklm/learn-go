@@ -57,5 +57,34 @@
 
 
 
+## dep from golang
+
+```shell
+go get -u github.com/golang/dep/cmd/dep
+
+```
+
+网上方档看不去讲得不太好懂。
+
+
+
+## glide
+
+```shell
+go get -u github.com/Masterminds/glide
+
+cd $GOPATH/src/github.com/Masterminds/glide
+go install
+
+glide
+
+```
+
+
+
+https://segmentfault.com/a/1190000005929355
+
+https://www.jianshu.com/p/7751affc933e
+
 
 
