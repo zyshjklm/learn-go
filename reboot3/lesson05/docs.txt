@@ -1,0 +1,5 @@
+OrgID org_id string
+Name name string
+City    city string
+ID      id      int
+Yidu    yidu   bool
