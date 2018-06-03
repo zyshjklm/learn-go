@@ -75,3 +75,20 @@ iota3.go
 
 iota-byte.go
 
+c语言的const是常量吗，更应该理解成只读变量。
+
+
+
+6）for循环操作struct
+
+slice-struct的赋值与循环
+
+* foreach1.go
+  * 示范创建结构体的slice，以及赋值。
+* foreach2.go
+  * 循环slice结构体，并赋值给map
+* foreach3.go
+  * 修改部分结构体。
+
+预测结构体需要使用的长度与容量，预先分配。避免过多的动态分配。出现性能抖动。
+
