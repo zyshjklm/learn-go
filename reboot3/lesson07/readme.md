@@ -15,6 +15,8 @@
 # go run string.go
 hewlo golang
 ```
+hello.go字符串的长度，以及类型转换。
+
 
 
 2）结构体操作
@@ -91,4 +93,21 @@ slice-struct的赋值与循环
   * 修改部分结构体。
 
 预测结构体需要使用的长度与容量，预先分配。避免过多的动态分配。出现性能抖动。
+
+
+
+7）heap
+
+```shell
+# go tool compile -S heap1.go | more
+
+# go tool compile -m heap1.go
+
+```
+
+
+
+8）func函数值
+
+func1.go
 
