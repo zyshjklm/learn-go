@@ -126,3 +126,21 @@ func1.go
 * routing2-chansort.go
   * 通过通道来保存排序的结果。
 
+通道同步
+
+* routine3-lock.go
+
+  * 示范一个错误的使用。会出现死锁。
+  * 因为ch不关闭，匿名函数的wg一起不结束。
+
+* routing3-dead.go
+
+  * 通过for-select模式，持续进行chan的读取操作。
+  * 如果没有chan变化，则执行default操作，并等待50毫秒
+  * 如果有多个chan变化，则随机选择一个执行。
+  * 因为时间设置为2：1，故每一次select到结果之前会执行2次default
+  * 当5个worker都返回时。
+    * wg的等待结束。
+    * 并执行对quit的写操作，让for-select循环return而结束。
+
+  ​
