@@ -111,3 +111,18 @@ slice-struct的赋值与循环
 
 func1.go
 
+
+
+
+
+### 二、goroutine
+
+* routine0.go
+  * 主程序太快，worker还等不等执行就退出了。最笨的办法是使用sleep解决。
+* routing1.go
+  * 一般使用WaitGroup来同步。
+* routing2-timesort.go
+  * 通过sleep时间来完成整数的排序。并使用sync.WaitGroup同步。
+* routing2-chansort.go
+  * 通过通道来保存排序的结果。
+
