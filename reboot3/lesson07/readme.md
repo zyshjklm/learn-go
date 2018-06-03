@@ -129,12 +129,9 @@ func1.go
 通道同步
 
 * routine3-lock.go
-
   * 示范一个错误的使用。会出现死锁。
   * 因为ch不关闭，匿名函数的wg一起不结束。
-
 * routing3-dead.go
-
   * 通过for-select模式，持续进行chan的读取操作。
   * 如果没有chan变化，则执行default操作，并等待50毫秒
   * 如果有多个chan变化，则随机选择一个执行。
@@ -142,5 +139,12 @@ func1.go
   * 当5个worker都返回时。
     * wg的等待结束。
     * 并执行对quit的写操作，让for-select循环return而结束。
+* routine4-sum.go
+  * 通过两个协程，将slice分成2半进行求和，再对结果二次求和。
 
-  ​
+
+
+chanbuf1.go，设置chan的缓冲长度。
+
+fib1.go，通过2种方式计算fib函数的值。
+
