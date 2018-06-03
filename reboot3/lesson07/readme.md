@@ -64,3 +64,14 @@ defer2.go
 关键是使用runtime的debug.PrintStack()函数。
 
 
+
+5）iota相关操作
+
+iota1.go
+
+iota2.go
+
+iota3.go
+
+iota-byte.go
+
