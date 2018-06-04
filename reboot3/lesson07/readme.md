@@ -148,3 +148,44 @@ chanbuf1.go，设置chan的缓冲长度。
 
 fib1.go，通过2种方式计算fib函数的值。
 
+
+
+### 三、cobra
+
+参考：http://time-track.cn/cobra-brief-introduction.html
+
+```shell
+# cobra init testCli
+Your Cobra application is ready at
+$GOPATH/src/testCli
+
+Give it a try by going there and running `go run main.go`.
+Add commands to it by running `cobra add [cmdname]`.
+
+# mv $GOPATH/testCli .
+# cd testCli
+# vim main.go
+修改依赖包路径
+
+# ls cmd
+# cobra add sort .
+# cobra add info .
+# cobra add ps .
+# ls cmd
+
+
+# vim cmd/sort.go
+# 增加之前的sort代码到sortCmd的Run中。
+
+# go build
+
+# ./testCli
+# ./testCli sort
+sort called
+1
+2
+3
+4
+5
+```
+
