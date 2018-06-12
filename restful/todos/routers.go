@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/jkak/learn-go/restful/logger"
 )
 
 // Route for router
@@ -21,7 +22,11 @@ type Routes []Route
 func NewRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 	for _, r := range routes {
-		router.Methods(r.Method).Path(r.Pattern).Name(r.Name).Handler(r.HandlerFunc)
+		var handler http.Handler
+		handler = r.HandlerFunc
+		handler = logger.Logger(handler, r.Name)
+
+		router.Methods(r.Method).Path(r.Pattern).Name(r.Name).Handler(handler)
 	}
 	return router
 }
