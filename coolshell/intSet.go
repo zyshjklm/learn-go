@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 	"strings"
@@ -49,6 +50,55 @@ func (set *IntSet) String() string {
 	return "{" + strings.Join(parts, ",") + "}"
 }
 
+// --- for Undo ---
+
+// UndoableIntSet as an undoable IntSet
+type UndoableIntSet struct {
+	IntSet // embedding(delegation)
+	Funcs  []func()
+}
+
+// NewUndoableIntSet to new an NewUndoableIntSet
+func NewUndoableIntSet() UndoableIntSet {
+	return UndoableIntSet{NewIntSet(), nil}
+}
+
+// Add to add an int to UndoableIntSet
+func (set *UndoableIntSet) Add(x int) {
+	// override Add() of IntSet
+	if !set.Has(x) {
+		set.data[x] = true
+		set.Funcs = append(set.Funcs, func() { set.Delete(x) })
+	}
+	set.Funcs = append(set.Funcs, nil)
+}
+
+// Delete to delete an int from UndoableIntSet
+func (set *UndoableIntSet) Delete(x int) {
+	// override Delete() of IntSet
+	if set.Has(x) {
+		delete(set.data, x)
+		set.Funcs = append(set.Funcs, func() { set.Add(x) })
+	}
+	set.Funcs = append(set.Funcs, nil)
+}
+
+// Undo to undo an Add or Delete ops
+func (set *UndoableIntSet) Undo() error {
+	if len(set.Funcs) == 0 {
+		return errors.New("no funcs to undo")
+	}
+	index := len(set.Funcs) - 1
+
+	if fName := set.Funcs[index]; fName != nil {
+		fName()
+		set.Funcs[index] = nil // free closure for barbage collection
+	}
+	fmt.Printf("- undo index %3d: %+v\n", index, set.IntSet)
+	set.Funcs = set.Funcs[:index]
+	return nil
+}
+
 func main() {
 	ints := NewIntSet()
 	for _, i := range []int{1, 3, 5, 7} {
@@ -72,4 +122,27 @@ func main() {
 	// 5 true	{map[7:true]}
 	// 6 false	{map[7:true]}
 	// 7 true	{map[]}
+
+	fmt.Println("\n---- Undo test ----")
+	undoInts := NewUndoableIntSet()
+	for _, i := range []int{1, 3, 5, 7} {
+		undoInts.Add(i)
+		fmt.Printf("%v\n\tundo funcs len:%d\n", undoInts.IntSet, len(undoInts.Funcs))
+	}
+
+	fmt.Println("\n-- Delete() --")
+	for _, i := range []int{1, 2, 3, 4, 5, 6, 7} {
+		fmt.Print(i, undoInts.Has(i), "\t")
+		undoInts.Delete(i)
+		fmt.Printf("%v\n\tfuncs len:%3d\n",
+			undoInts.IntSet, len(undoInts.Funcs))
+	}
+
+	fmt.Println("\n-- Undo() --")
+	for {
+		if err := undoInts.Undo(); err != nil {
+			break
+		}
+	}
+	fmt.Println(undoInts)
 }
