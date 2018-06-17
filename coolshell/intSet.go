@@ -69,8 +69,9 @@ func (set *UndoableIntSet) Add(x int) {
 	if !set.Has(x) {
 		set.data[x] = true
 		set.Funcs = append(set.Funcs, func() { set.Delete(x) })
+	} else {
+		set.Funcs = append(set.Funcs, nil)
 	}
-	set.Funcs = append(set.Funcs, nil)
 }
 
 // Delete to delete an int from UndoableIntSet
@@ -79,8 +80,9 @@ func (set *UndoableIntSet) Delete(x int) {
 	if set.Has(x) {
 		delete(set.data, x)
 		set.Funcs = append(set.Funcs, func() { set.Add(x) })
+	} else {
+		set.Funcs = append(set.Funcs, nil)
 	}
-	set.Funcs = append(set.Funcs, nil)
 }
 
 // Undo to undo an Add or Delete ops
