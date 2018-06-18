@@ -145,3 +145,115 @@ dcl: [g h i]
 2d: [[0] [1 2] [2 3 4]]
 ```
 
+
+
+#### 08-1 array and slice
+
+refer: https://blog.golang.org/go-slices-usage-and-internals
+
+**Arrays**
+
+An array type definition specifies a length and an element type. [4]int represents an array of for integers. An array's size is fixed; its length is part of its type.
+
+the zero value of an array is a ready-to-use array whose elements are themselves zeroed.
+
+important: Go's array are values. An array variable denotes the entire array; it is not a pointer to the first array element as would be the case in C.
+
+**Slices**
+
+Slices are build on arrays to provide great power and convienience. Unlike an array type, a slice type has no specified length.
+
+```go
+# array
+arr := [5]int
+
+# slice
+letters := []string{"a", "b", "c"}
+```
+
+slice can be created with the make func: `func make([]T, len, cap) []T`.
+
+*   len: length of []T slice
+*   cap: optional capacity. 
+    *   when the cap argument is omitted, it defaults to the specified length.
+*   make allocates an array and return a slice that refers to the array.
+
+```go
+s := make([]byte, 5)
+len(s) == 5
+cap(s) == 5
+```
+
+the zero value of a slice is `nil`. 
+
+**len and cap**
+
+Slicing is done by specifying a half-open range with two indices separated by a colon.
+
+**Slice internals**
+
+A slice is a descriptor of an array segment. It consists of:
+
+*   a pointer to the array
+*   the length of the segment
+*   capacity(the maximum length of the segment)
+
+example:
+
+`slice1 := make([]byte, 5)`
+
+![slice1](https://blog.golang.org/go-slices-usage-and-internals_slice-1.png)
+
+`s = slice1[2:4]`
+
+![slice2](https://blog.golang.org/go-slices-usage-and-internals_slice-2.png)
+
+**grow slice**
+
+```go
+s1 := make([]byte, 5)
+s2 := s1[2:4]
+// grow s2 to its capacity by slicing it again.
+s2 := s2[:cap(s2)]
+```
+
+A slice cannot be grown beyond its capacity.
+
+To increase the capacity of a slice one must create a new, larger slice and copy the contents of the original slice into it.
+
+```go
+s := make([]int, 5)
+t := make([]int, len(s), (cap(s)+1)*2) // +1 in case cap(s) == 1
+copy(t, s)
+s = t
+```
+
+A common operation is to append data to the endo of a slice.
+
+```go
+func AppendByte(s []byte, data ...byte) []byte {
+  m := len(s)
+  n := m + len(data)
+  if n > cap(s) {
+    newSlice := make([]byte, (n+1)*2)
+    copy(newSlice, s)
+    s = newSlice
+  }
+  s = s[0:n]
+  copy(s[m:n], data)
+  return s
+}
+```
+
+append func: `func append(s []T, x ...T) []T`.
+
+usage:
+
+```go
+a := []string{"John", "Paul"}
+b := []string{"George", "Ringo", "Pete"}
+a = append(a, b...) 
+// equivalent to "append(a, b[0], b[1], b[2])"
+// a == []string{"John", "Paul", "George", "Ringo", "Pete"}
+```
+
