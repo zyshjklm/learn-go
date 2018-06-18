@@ -104,3 +104,44 @@ I'm an int
 Don't know type string
 ```
 
+
+
+### 07 array
+
+array: [3]int. TYPE and LEN
+
+```shell
+# go run 07-arrays.go
+emp: [0 0 0 0 0]
+set: [0 0 0 0 100]
+get: 100
+len: 5
+dcl: [1 2 3 4 5]
+2d: [[0 1 2] [1 2 3]]
+```
+
+
+
+### 08 slice
+
+slice are a key **data type** IN GO, giving a more powerful interface to sequences than arrsys. 
+
+slice are typed only by the elements they contain.
+
+`make([]string, 3)` create a slice of strings of length 3.
+
+```shell
+# go run 08-slice.go
+emp [  ]
+set: [a b c]
+get: c
+len: 3
+apd: [a b c d e f]
+cpy: [a b c d e f]
+sl1: [c d e]
+sl2: [a b c d e]
+sl3: [c d e f]
+dcl: [g h i]
+2d: [[0] [1 2] [2 3 4]]
+```
+
