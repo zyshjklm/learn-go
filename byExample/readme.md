@@ -257,3 +257,34 @@ a = append(a, b...)
 // a == []string{"John", "Paul", "George", "Ringo", "Pete"}
 ```
 
+
+
+### 09 maps
+
+```shell
+# go run 09-map.go
+map: map[k1:7 k2:23]
+v1: 7
+len: 2
+map: map[k1:7]
+prs: false
+map: map[foo:1 bar:2]
+```
+
+
+
+### 10 range
+
+range iterates over elements in a variety of data structures.
+
+```shell
+# go run 10-range.go
+sum: 9
+index: 1
+b -> banana
+a -> apple
+key: b
+0 103
+1 111
+```
+
