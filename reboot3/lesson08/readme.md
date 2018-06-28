@@ -72,5 +72,60 @@ for i:=0;i<10;i++{
 
 
 
+### prime
+
+计算质数：
+
+```shell
+# go run prime.go
+
+```
+
+
+
+计算较多的质数，观察单核与双核的调度：
+
+只有一个核，但因为要设计的质数比较多，一个routine计算后会被换出。由另一个进行。
+
+```shell
+#### GOMAXPROCS(1)
+# go run prime2.go
+go B: 2
+go B: 3
+go B: 5
+go B: 7
+# ...
+
+go B: 3181
+go B: 3187
+go A: 2
+go A: 3
+
+go A: 4493
+go A: 4507
+go A: 4513
+go B: 3191
+go B: 3203
+# ...
+
+go B: 4993
+go B: 4999
+B finished
+go A: 4517
+go A: 4519
+# ...
+
+go A: 4999
+A finished
+```
+
+如果将GOMAXPROCS置为2，则输出结果是两个routine同时输出。
+
+通过对比，goroutine的调度是在逻辑核上进行的。
+
+单个核时：所有的routine在队列中等待。正在运行的Gr到阻塞时，会让出cpu，让队列中的Gr运行；而阻塞的Gr如果恢复出来，再进入队列。
+
+多个核时：是单核时的并行处理。
+
 
 
