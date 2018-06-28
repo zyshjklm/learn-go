@@ -129,3 +129,89 @@ A finished
 
 
 
+## goto/break/contine
+
+### goto的坑
+
+* 死循环
+
+```go
+func main() {
+LABEL:
+	for i := 0; i < 10; i++ {
+		fmt.Println(i)
+		goto LABEL
+	}
+}
+// 持续不断的输出0
+```
+
+
+
+* goto到label之间有变量声明
+
+goto到后面的区间内，不要声明变量
+
+测试
+
+```shell
+# go run label.go
+# command-line-arguments
+./label.go:10:11: goto End jumps over declaration of out at ./label.go:15:6
+```
+
+应该将out定义在for前面。否则，没有被声明。
+
+
+
+### 区别
+
+- break跳出某个标签
+- contine是继续某个标签，变量会继续迭代
+- goto是跳到某个标签，变量重新开始运行迭代
+
+
+
+同样是计算prime的函数。使用continue与break的差别。
+
+goto正常使用的示例: 
+
+```shell
+# diff continuePrime.go breakPrime.go
+16c16
+< 				continue next
+---
+> 				break next
+
+# go run continuePrime.go
+go B: 2
+	 continue:out=3,in=2
+go B: 3
+	 continue:out=4,in=2
+	 continue:out=5,in=2
+	 continue:out=5,in=3
+	 continue:out=5,in=4
+go B: 5
+	 continue:out=6,in=2
+	 continue:out=7,in=2
+### ...
+```
+
+goto错误使用的示例 breakPrime.go
+
+```shell
+# go run breakPrime.go
+go B: 2
+	 continue:out=3,in=2
+go B: 3
+	 continue:out=4,in=2
+B finished
+go A: 2
+	 continue:out=3,in=2
+go A: 3
+	 continue:out=4,in=2
+A finished
+```
+
+
+
