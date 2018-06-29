@@ -243,3 +243,34 @@ song miss, the number is 38
 chen won!!!
 ```
 
+
+
+无缓冲方式实现runner
+
+```shell
+# cobra add runner
+
+# vim cmd/runner.go
+
+# go run main.go runner
+runner called
+start runner()
+
+runner 1 running with Baton
+runner 1 use 0 seconds to the line
+runner 1 exchange with runner 2
+
+runner 2 running with Baton
+runner 2 use 3 seconds to the line
+runner 2 exchange with runner 3
+
+runner 3 running with Baton
+runner 3 use 3 seconds to the line
+runner 3 exchange with runner 4
+
+runner 4 running with Baton
+runner 4 use 2 seconds to the line
+runner 4 finish. Race over!
+
+```
+
