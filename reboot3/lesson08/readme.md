@@ -221,3 +221,25 @@ A finished
 
 具体参考gotoUsage.go的三个不同的使用方式。
 
+
+
+### goto as for
+
+使用goto来实现for循环的功能：
+
+```shell
+# go run  myFor.go
+use goto statement to implement for loop:
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+over
+```
+
