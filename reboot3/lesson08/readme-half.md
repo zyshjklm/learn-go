@@ -195,3 +195,51 @@ mutex5.go
 
 
 
+## channel
+
+channel是线程安全的。分为带缓冲和不带缓冲。
+
+routine通过管道来共享资源。
+
+### 无缓冲区
+
+```shell
+# mkdir testChan
+# cd testChan
+# cobra init
+Your Cobra application is ready at ... reboot3/lesson08/testChan
+
+Give it a try by going there and running `go run main.go`.
+Add commands to it by running `cobra add [cmdname]`.
+
+# cobra add ball
+
+# go run main.go ball
+ball called
+```
+
+ball用于打球ball操作:
+
+* 修改Run变量的内容
+* init()中增加随机数种子
+* 实现player函数
+
+效果：
+
+```shell
+# go run main.go ball
+ball called
+start playing!!
+chen starting!
+Player chen hit ball 1 with rand 14
+song starting!
+Player song hit ball 2 with rand 60
+Player chen hit ball 3 with rand 51
+Player song hit ball 4 with rand 24
+Player chen hit ball 5 with rand 13
+Player song hit ball 6 with rand 48
+Player chen hit ball 7 with rand 34
+song miss, the number is 38
+chen won!!!
+```
+
