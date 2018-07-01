@@ -339,3 +339,51 @@ ok  	github.com/jkak/learn-go/reboot3/lesson08/unbuf	0.007s
 # go run main.go ball
 ```
 
+
+
+### 有缓冲区
+
+无缓冲区的channel，就像快递员到你家送信，你不在家就等着你，直到你亲自签收。
+
+而有缓冲区的channel，就像你家门口的信箱。不管你在不在家（是否读取channel），只要信箱没有满，快递员直接将信放入信箱就走了。
+
+
+
+### channel死锁
+
+重点需要关注一下死锁。
+
+实现一个功能，从一个chan读数据，然后将读到的数据写入另一个chan。
+
+```shell
+# go run main1.go
+1
+2
+3
+fatal error: all goroutines are asleep - deadlock!
+
+goroutine 1 [chan receive]:
+main.main()
+```
+
+如果改变文件中for循环的次数，报警会略有不同。
+
+
+
+分析这个main1.go文件，对channel的操作则2个关于channel读和写的代码：
+
+```go
+// write to ch2 
+go func() {
+    x := <-ch1
+    ch2 <- x
+}()
+
+// read from ch2
+for val := range ch2 {
+    fmt.Println(val)
+}
+```
+
+问题出现在for range会一直等待ch2，无法结束，这就会被Go判定产生了死锁。
+
