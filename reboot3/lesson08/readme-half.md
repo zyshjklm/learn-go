@@ -203,6 +203,10 @@ routine通过管道来共享资源。
 
 ### 无缓冲区
 
+#### testChan
+
+通过cobra进行封装。
+
 ```shell
 # mkdir testChan
 # cd testChan
@@ -272,5 +276,66 @@ runner 4 running with Baton
 runner 4 use 2 seconds to the line
 runner 4 finish. Race over!
 
+```
+
+
+
+#### 封装unbuf包
+
+* ball
+
+```shell
+# cd ../ 
+# mkdir unbuf && cd unbuf
+# vim player.go
+#### 将上述ball相关的功能实现在player.go
+# vim player_test.go
+
+# go test
+start playing!!
+song starting!
+song miss, the number is 38
+chen starting!
+chen won!!!
+PASS
+ok  	github.com/jkak/learn-go/reboot3/lesson08/unbuf	0.007s
+
+```
+
+* runner
+
+```shell
+# vim runner.go
+# vim runner_test.go
+
+# go test
+
+```
+
+
+
+#### testChan2调用unbuf
+
+初始化环境
+
+```shell
+# cd ../
+# mdkir testChan2 && cd testChan2
+
+# cobra init
+# cobra add ball
+# cobra add runner
+
+# go run main.go
+```
+
+
+
+修改cmd/ball.go, cmd/runner.go，调用unbuf包。
+
+```shell
+# go run main.go
+# go run main.go runner
+# go run main.go ball
 ```
 

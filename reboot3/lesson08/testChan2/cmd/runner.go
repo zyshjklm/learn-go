@@ -17,13 +17,14 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/jkak/learn-go/reboot3/lesson08/unbuf"
 	"github.com/spf13/cobra"
 )
 
 // runnerCmd represents the runner command
 var runnerCmd = &cobra.Command{
 	Use:   "runner",
-	Short: "A brief description of your command",
+	Short: "a race game with 4 runner",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -32,6 +33,8 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("runner called")
+
+		unbuf.Runner()
 	},
 }
 

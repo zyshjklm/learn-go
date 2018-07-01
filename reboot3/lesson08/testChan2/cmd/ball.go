@@ -17,6 +17,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/jkak/learn-go/reboot3/lesson08/unbuf"
 	"github.com/spf13/cobra"
 )
 
@@ -32,6 +33,9 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("ball called")
+
+		obj := unbuf.NewPlayer("song", "chen")
+		obj.StartPlayer()
 	},
 }
 
