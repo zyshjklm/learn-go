@@ -387,3 +387,26 @@ for val := range ch2 {
 
 问题出现在for range会一直等待ch2，无法结束，这就会被Go判定产生了死锁。
 
+
+
+**破解方法：**
+
+- 信息流入与流出对等时，增加等待时间或同步。
+- 及时关闭已经结束的channel。
+
+
+
+#### 等待
+
+处理办法一：
+
+* 将for range部分与放一routine中。让主程序不受chan影响
+* 在主程序中等待两个协程结束。最简单的使用Sleep，优雅的方式使用WaitGroup
+
+```shell
+# o run main2.go
+1
+2
+3
+```
+
