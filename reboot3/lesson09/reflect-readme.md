@@ -109,3 +109,26 @@ type:string
 
 注意运行结果中，name的索引Index值，与password值中的Index的差别。
 
+
+
+main7.go 获取结构体的方法
+
+```shell
+# go run main7.go
+*main.Http
+{Name:GetAgent PkgPath: Type:func(*main.Http) string Func:<func(*main.Http) string Value> Index:0}
+{Name:GetHost PkgPath: Type:func(*main.Http) string Func:<func(*main.Http) string Value> Index:1}
+{Name:GetName PkgPath: Type:func(*main.Http) string Func:<func(*main.Http) string Value> Index:2}
+{Name:GetPass PkgPath: Type:func(*main.Http) string Func:<func(*main.Http) string Value> Index:3}
+```
+
+注意点：
+
+* 需要使用指针变量的反射来操作
+* 方法的数量使用t.NumMethod()函数。
+* t.Method(i) 返回的是第i个方法结构体。其主要字段：
+  * Name 方法名
+  * PkgPath 包路径，即包是在那里定义的
+  * Func 即函数的声明方式，包括参数及返回类型
+  * Index 索引值
+
