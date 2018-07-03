@@ -51,3 +51,39 @@ type: main.X32, value:100
 
 
 
+### 结构体的反射
+
+main4.go 先定义了一个嵌套的结构体。再通过反射来获取其类型。并分别操作结构体变量，结构体指针的反射。
+
+```shell
+# go run main4.go
+*main.Http
+main.Http
+main.Http
+```
+
+其中`reflect.Ptr`是个变量，表示的是反射指针。比较时需要使用Kind()。
+
+
+
+main5.go 通过反射遍历结构体的字段Field。包括遍历嵌套字段。
+
+```shell
+# go run main5.go
+*main.Http
+type:string,name:host,index:[0],offset:0
+type:string,name:agent,index:[1],offset:16
+type:main.data,name:data,index:[2],offset:32
+-- type:string,name:name,index:[0],offset:0
+-- type:string,name:password,index:[1],offset:16
+```
+
+最后2行即是嵌套的data字段。
+
+主要知识点：
+
+* t.NumField() 是字段的数量
+* t.Field(i) 是获取第i个字段的描述结构体。包括Type, Name, Index, Offset等
+* 描述结构体的`f.Anonymous`代表是否匿名字段
+* 获取嵌套字段使用上述的`Type`变量。
+
