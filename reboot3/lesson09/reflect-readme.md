@@ -87,3 +87,25 @@ type:main.data,name:data,index:[2],offset:32
 * 描述结构体的`f.Anonymous`代表是否匿名字段
 * 获取嵌套字段使用上述的`Type`变量。
 
+
+
+main6.go 获取字段名
+
+```shell
+# go run main6.go
+main.Http
+name:{Name:name PkgPath:main Type:string Tag: Offset:0 Index:[2 0] Anonymous:false}
+type:string
+
+password:{Name:password PkgPath:main Type:string Tag: Offset:16 Index:[1] Anonymous:false}
+type:string
+
+```
+
+获取字段的2种方式：
+
+* t.FieldByName() 基于字段名，包括匿名嵌套的字段名。
+* t.FieldByIndex() 基于字段索引。 
+
+注意运行结果中，name的索引Index值，与password值中的Index的差别。
+
