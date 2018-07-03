@@ -106,3 +106,27 @@ c
 &{16 19}
 ```
 
+
+
+internal目录
+
+```shell
+# go run access2.go
+access2.go:4:2: use of internal package not allowed
+```
+
+包的依赖路径上包括了internal，就不能调用。
+
+
+
+```shell
+# go run access3.go
+A
+```
+
+依赖的是"./internal/a"。引用正常。
+
+也就是，除了相对路径外，其他方式不能包括`internal`字样。
+
+
+
