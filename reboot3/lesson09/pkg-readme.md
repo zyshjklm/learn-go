@@ -94,6 +94,7 @@ c
 
 
 
+
 ### 包的可见性
 
 引用“pkgbase/meta”包。其中一个变量可见，一个不可见。
@@ -128,5 +129,19 @@ A
 
 也就是，除了相对路径外，其他方式不能包括`internal`字样。
 
+
+
+#### 外部包
+
+先实现一个独立的包。github.com/jkak/test/mytest。
+
+继续在pkgtest目录操作：
+
+```shell
+# go get -v github.com/jkak/test/
+
+# go run main5.go
+hello golang!
+```
 
 
