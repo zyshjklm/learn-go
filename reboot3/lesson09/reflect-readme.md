@@ -132,3 +132,45 @@ main7.go 获取结构体的方法
   * Func 即函数的声明方式，包括参数及返回类型
   * Index 索引值
 
+
+
+main8.go 结构体方法的详细比较之一：
+
+* Http及Data结构体都各定义2个方法，且都使用指针接受者。
+* 反射时使用指针，但在获取方法时，分别对比指针及其Elem。
+
+```shell
+# go run main8.go
+ptr: *main.Http
+{GetAgent  func(*main.Http) string <func(*main.Http) string Value> 0}
+{GetHost  func(*main.Http) string <func(*main.Http) string Value> 1}
+{GetName  func(*main.Http) string <func(*main.Http) string Value> 2}
+{GetPass  func(*main.Http) string <func(*main.Http) string Value> 3}
+elem: main.Http
+```
+
+从上可见，通过指针反射，可能获取到所有使用指针接受者的方法，使用Elem()变量却不能获取指针接受者方法。
+
+
+
+main9.go 主要是与main8.go形成对比。
+
+改变了2个方法的接受者类型。
+
+```shell
+# go run main9.go
+ptr: *main.Http
+{GetAgent  func(*main.Http) string <func(*main.Http) string Value> 0}
+{GetHost  func(*main.Http) string <func(*main.Http) string Value> 1}
+{GetName  func(*main.Http) string <func(*main.Http) string Value> 2}
+{GetPass  func(*main.Http) string <func(*main.Http) string Value> 3}
+elem: main.Http
+{GetAgent  func(main.Http) string <func(main.Http) string Value> 0}
+{GetPass  func(main.Http) string <func(main.Http) string Value> 1}
+```
+
+当GetAgent及GetPass使用变量为接受者时：
+
+* 指针反射可以获取到所有类型的方法，包括指针接受者及变量接受者。
+* 变量反射只能获取到使用变量为接受者的方法。
+
