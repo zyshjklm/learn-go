@@ -51,6 +51,7 @@ type: main.X32, value:100
 
 
 
+
 ### 结构体的反射
 
 main4.go 先定义了一个嵌套的结构体。再通过反射来获取其类型。并分别操作结构体变量，结构体指针的反射。
@@ -174,3 +175,41 @@ elem: main.Http
 * 指针反射可以获取到所有类型的方法，包括指针接受者及变量接受者。
 * 变量反射只能获取到使用变量为接受者的方法。
 
+反射是建立在数据类型的基础之上的。需要是静态类型语言。
+
+
+
+### 结构体tag
+
+结构体的tag存在坑。需要特别注意。
+
+```shell
+# cd ../
+# mkdir reflecttag
+# cd reflecttag
+
+# go run mainTag1.go
+{"DiskIOPS":"100"}
+d:{DiskIOPS:100}
+s:{DiskIOPS:}
+
+# go run mainTag2.go
+{"DiskIOPS":"100"}
+d:{DiskIOPS:100}
+s:{DiskIOPS:100}
+
+# diff mainTag1.go mainTag2.go
+9c9
+< 	DiskIOPS string `json:"disk-IOPS"`
+---
+> 	DiskIOPS string `json:"diskiops"`
+28d27
+<
+```
+
+这两个程序唯一的差别就是tag的名称有点差异。mainTag2.go中，tag与字段DiskIOPS只有大小写的差别。因此可以反序列化。其间的逻辑关系：
+
+* 对d进行序列化，而D没有定义json序列化的tag，因此使用了字段名DiskIOPS。
+* 故序列化的结果，jd使用DiskIOPS作为Key.
+* 将jd反序列化到s时，S设置了json的tag为diskiops，这与jd中的DiskIOPS只有大小写差异
+* 因此可以反序列化，且使用S的DiskIOPS为字段名。
