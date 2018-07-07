@@ -236,3 +236,48 @@ s:{DiskIOPS:100}
 * 最后查找字段名字为FieldKey等大小写不敏感的匹配字段tagKey
 * 如果没有找到，则忽略这个key， 不会报错
 
+
+
+### 结构体赋值
+
+自定义变量
+
+对反射进行赋值时，也需要使用反射。
+
+```shell
+# go run mainSet1.go
+type:*main.X32, canAddr:false, canSet:false
+type:main.X32, canAddr:true, canSet:true
+100
+50
+```
+
+这里主要使用了反射的几个方法：
+
+* Type()
+* CanAddr()
+* CanSet()
+
+
+
+结构体
+
+```shell
+# go run mainSet2.go
+type:string, canAddr:true, canSet:true
+type:string, canAddr:true, canSet:false
+name:cc, age20
+{Name:cc age:20}
+```
+
+其中最难的是对隐藏变量age进行赋值：
+
+```go
+*(*string)(unsafe.Pointer(age.UnsafeAddr())) = "20"
+// age是原结构体变量g的age字段的反射
+// age.UnsafeAddr() 获取反射变量age的地址
+// unsafe.Pointer() 将上述地址转换为底层指针
+// (*string)(PTR)  是将底层指针转换为字符串指针
+// *(*string)(PTR) 是对上述字符串指针取值，得到具体地址。
+```
+
