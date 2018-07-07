@@ -210,6 +210,29 @@ s:{DiskIOPS:100}
 这两个程序唯一的差别就是tag的名称有点差异。mainTag2.go中，tag与字段DiskIOPS只有大小写的差别。因此可以反序列化。其间的逻辑关系：
 
 * 对d进行序列化，而D没有定义json序列化的tag，因此使用了字段名DiskIOPS。
-* 故序列化的结果，jd使用DiskIOPS作为Key.
+* 故序列化的结果，jd使用**DiskIOPS**作为Key.
 * 将jd反序列化到s时，S设置了json的tag为diskiops，这与jd中的DiskIOPS只有大小写差异
 * 因此可以反序列化，且使用S的DiskIOPS为字段名。
+
+
+
+设置json的tag
+
+```shell
+# go run mainTag3.go
+{"disk-iops":"100"}
+d:{DiskIOPS:100}
+s:{DiskIOPS:100}
+```
+
+两结构体都显式设置`json:"disk-iops"`。因此上述序列化结果为`{"disk-iops":"100"}`。通过disk-iops完成了两个结构体的转换。
+
+总结上述转换过程：
+
+如果给定一个JSON，key 为FieldKey。tag为tagKey。
+
+* 首先查找json tag名字为tagKey的字段
+* 然后查找字段名字为FieldKey的字段
+* 最后查找字段名字为FieldKey等大小写不敏感的匹配字段tagKey
+* 如果没有找到，则忽略这个key， 不会报错
+
