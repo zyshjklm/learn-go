@@ -195,6 +195,58 @@ mutex5.go
 
 
 
+用工具检查竞争
+
+mutex3.go有竞争
+
+```shell
+# go build -race mutex3.go
+# ./mutex3
+==================
+WARNING: DATA RACE
+Write at 0x00c42008c180 by goroutine 7:
+  runtime.mapassign_faststr()
+      /Users/song/go1.10/src/runtime/hashmap_fast.go:694 +0x0
+  main.opWriteMap()
+ 
+Previous read at 0x00c42008c180 by goroutine 6:
+  runtime.mapiterinit()
+      /Users/song/go1.10/src/runtime/hashmap.go:691 +0x0
+  main.opReadMap()
+# ...
+==================
+over
+Found 1 data race(s)
+```
+
+
+
+mutex4.go，mutex5.go没有竞争
+
+```shell
+# go build -race mutex4.go
+# ./mutex4
+== write == 0
+== write == 1
+# ...
+-- read id=19: key=3, val=3
+-- read id=19: key=4, val=4
+== write == 5
+== write == 6
+== write == 7
+== write == 8
+== write == 9
+over
+
+# go build -race mutex5.go
+# ./mutex5
+#### 效果同上
+```
+
+
+
+
+
 ## channel
 
 channel是线程安全的。分为带缓冲和不带缓冲。
