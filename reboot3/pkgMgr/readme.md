@@ -53,6 +53,43 @@
 
 
 
+### 五、vendor目录
+
+#### l5.1 不使用包管理
+
+```shell
+# go get github.com/jkak/test
+# ls -l $GOPATH/src/github.com/jkak/test/mytest/mytest.go
+
+# mkdir nopkg && cd nopkg
+# vim main1.go
+# go run main1.go
+hello golang!
+```
+
+
+
+#### 5.2 使用vendor目录
+
+测试使用vendor目录。将`go get`下载的包文件，移到本地的vendor目录下。依然可以运行。也就是，go在编译时，如果发现有vendor目录，则会优先在vendor目录下寻找依赖包。
+
+```shell
+# mkdir -p vendor/github.com/jkak/
+# mv $GOPATH/src/github.com/jkak/test vendor/github.com/jkak/
+# ls -lh vendor/github.com/jkak/test/mytest
+# ls -l $GOPATH/src/github.com/jkak/test
+ls: ~/src/github.com/jkak/test: No such file or directory
+
+# go run main1.go
+hello golang!
+```
+
+需要注意的是，vendor下的目录结构，需要与`$GOPATH/src/`目录一致。
+
+
+
+
+
 
 
 
