@@ -1,0 +1,5 @@
+package: github.com/jkak/learn-go/reboot3/pkgMgr/test1-glide
+import:
+- package: github.com/jkak/test
+  subpackages:
+  - mytest

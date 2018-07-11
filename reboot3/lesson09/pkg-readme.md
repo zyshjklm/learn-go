@@ -145,3 +145,11 @@ hello golang!
 ```
 
 
+
+如何保留当前使用的版本呢？
+
+golang提供了vendor目录。社区也提供了多种管理工具。主要有glide, godep, dep等工具。
+
+参考：
+$GOPATH/src/github.com/jkak/learn-go/reboot3/pkgMgr
+
