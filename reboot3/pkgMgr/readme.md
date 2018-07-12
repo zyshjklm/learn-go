@@ -239,5 +239,74 @@ golang test func
 
 
 
+其它参考：
+
+* https://segmentfault.com/a/1190000005929355
+* https://www.jianshu.com/p/7751affc933e
+
+
+
+### 七、godep
+
+安装工具
+
+```shell
+# go get github.com/tools/godep
+# which godep
+```
+
+测试环境
+
+```shell
+# cd ../
+# mkdir test2-godep
+# cp -v test1-glide/main1.go test2-godep
+# cd test2-godep 
+```
+
+使用godep
+
+```shell
+# rm -rf $GOPATH/src/github.com/jkak/test/
+# ls -lh $GOPATH/src/github.com/jkak/test/	### 不存在了
+
+# godep get
+# ls -lh $GOPATH/src/github.com/jkak/test/
+total 8
+-rw-r--r--  1 song  staff   33 Jul 12 23:48 README.md
+drwxr-xr-x  3 song  staff  102 Jul 12 23:48 mytest
+drwxr-xr-x  3 song  staff  102 Jul 12 23:48 server
+
+# ls
+main1.go
+# godep save
+
+# ls -lh
+total 8
+drwxr-xr-x  4 song  staff   136B Jul 12 23:50 Godeps
+-rw-r--r--  1 song  staff   104B Jul 12 23:46 main1.go
+drwxr-xr-x  3 song  staff   102B Jul 12 23:50 vendor
+# ls -lh vendor/github.com/jkak/test
+total 0
+drwxr-xr-x  3 song  staff   102B Jul 12 23:50 mytest
+
+# go run main1.go
+hello golang!
+golang test func
+```
+
+如上，只引用了test中的mytest包。
+
+总结godep相关操作：
+
+* godep get 是将包存在到$GOPATH/src/目录
+* godep save将$GOPATH/src/下的包保存到本地的vendor。
+* godep restore可以还源$GOPATH/src/下的没有的目录。
+  * 比如$GOPATH/src/下没有github.com/jkak/test时，
+  * 就可以该命令将vendor下的库用来恢复到$GOPATH/src/下。
+* godep update用来更新。
+* 不要随意去清除包里的`.git`信息，不然会影响godep的使用。
+  * 如果直接在$GOPATH/src/下相关的包里进行了修改，但没有保存并commit。
+  * 则godep save会提示出现了dirty数据。
 
 

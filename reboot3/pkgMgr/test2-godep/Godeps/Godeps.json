@@ -1,0 +1,11 @@
+{
+	"ImportPath": "github.com/jkak/learn-go/reboot3/pkgMgr/test2-godep",
+	"GoVersion": "go1.10",
+	"GodepVersion": "v79",
+	"Deps": [
+		{
+			"ImportPath": "github.com/jkak/test/mytest",
+			"Rev": "0c89b4ace09437c4ee22c207ad13e1aa0c8b9267"
+		}
+	]
+}
