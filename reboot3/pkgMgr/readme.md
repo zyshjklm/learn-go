@@ -310,3 +310,62 @@ golang test func
   * 则godep save会提示出现了dirty数据。
 
 
+
+### 八、dep
+
+安装
+
+```shell
+# go get github.com/golang/dep/cmd/dep
+# dep
+```
+
+测试环境
+
+```shell
+# cd ../
+# mkdir test3-dep
+# cp -v test1-glide/main1.go test3-dep
+# cd test3-dep 
+# ls
+main1.go
+
+# rm -rf $GOPATH/src/github.com/jkak/test/
+# ls -lh $GOPATH/src/github.com/jkak/test/	
+### No such file or directory
+
+# dep
+# dep init
+  Using master as constraint for direct dep github.com/jkak/test
+  Locking in master (0c89b4a) for direct dep github.com/jkak/test
+
+# ls -lh $GOPATH/src/github.com/jkak/test/	### 还是没有目录
+# ls -lh
+total 24
+-rw-r--r--  1 song  staff   432B Jul 12 23:59 Gopkg.lock
+-rw-r--r--  1 song  staff   723B Jul 12 23:59 Gopkg.toml
+-rw-r--r--  1 song  staff   104B Jul 12 23:57 main1.go
+drwxr-xr-x  3 song  staff   102B Jul 12 23:59 vendor
+
+# go run main1.go
+hello golang!
+golang test func
+```
+
+`dep init`只影响本目录下的依赖包，不影响$GOPATH下的包。
+
+
+
+关于ensure
+
+```shell
+# mkdir vendor/abcd
+# ls vendor
+abcd       github.com
+# dep ensure
+# ls vendor
+github.com
+```
+
+ensure会确保vendor下的目录是真实需要的，多余的目录会被删除掉。
+
