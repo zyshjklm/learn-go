@@ -23,6 +23,7 @@ func ConnectServer(host string, port uint16) {
 	}
 	defer conn.Close()
 
+	common.SetTimeout(conn, 3)
 	fmt.Println("send...")
 	fmt.Fprintf(conn, "[%+v] this is a client ...\n", time.Now())
 

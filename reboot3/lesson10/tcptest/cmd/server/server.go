@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net"
+	"time"
 
 	"github.com/jkak/learn-go/reboot3/lesson10/tcptest/cmd/common"
 )
@@ -28,6 +29,9 @@ func TCPServer(host string, port uint16) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		// simulate timeout
+		time.Sleep(10 * time.Second)
+
 		go func(c net.Conn) {
 			io.Copy(c, c)
 			c.Close()
