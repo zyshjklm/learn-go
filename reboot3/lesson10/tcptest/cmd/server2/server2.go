@@ -1,6 +1,8 @@
 package server2
 
 import (
+	"bytes"
+	"encoding/binary"
 	"fmt"
 	"log"
 	"net"
@@ -28,21 +30,64 @@ func TCPServer(host string, port uint16) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		// Handle the connection in a new goroutine.
+		// The loop then returns to accepting, so that
+		// multiple connections may be served concurrently.
 		go handleNewFunc(conn)
 	}
+}
+
+// reader process and consume the message form chan
+func reader(rdCh chan []byte) {
+	for {
+		select {
+		case msg := <-rdCh:
+			fmt.Println(string(msg))
+		}
+	}
+}
+
+func bytes2Int(b []byte) int {
+	bb := bytes.NewBuffer(b)
+	var x int32
+	binary.Read(bb, binary.BigEndian, &x)
+	return int(x)
+}
+
+func unPacket(btbuf []byte, rdCh chan []byte) []byte {
+	length := len(btbuf)
+	var i int
+	for i = 0; i < length; i++ {
+		if length < i+4 {
+			break
+		}
+		msgLen := bytes2Int(btbuf[i : i+4])
+		data := btbuf[i+4 : i+4+msgLen]
+		rdCh <- data
+		i += msgLen + 4 - 1 // from 0
+	}
+	if i == length {
+		return make([]byte, 0)
+	}
+	return btbuf[i:]
 }
 
 func handleNewFunc(c net.Conn) {
 	defer c.Close()
 
 	var buf = make([]byte, 1024)
+	var tmpBuf = make([]byte, 0)
+
+	readerChan := make(chan []byte, 20)
+	go reader(readerChan)
+
 	for {
 		n, err := c.Read(buf)
 		if err != nil {
 			log.Println(err)
 			return
 		}
-		fmt.Println(n, string(buf[:n]))
+		tmpBuf = unPacket(append(tmpBuf, buf[:n]...), readerChan)
 	}
 }
 

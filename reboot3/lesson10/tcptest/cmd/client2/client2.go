@@ -1,6 +1,8 @@
 package client2
 
 import (
+	"bytes"
+	"encoding/binary"
 	"fmt"
 	"log"
 	"net"
@@ -29,15 +31,28 @@ func ConnectServer(host string, port uint16) {
 	wg.Wait()
 }
 
+func int2byte(n int) []byte {
+	x := int32(n)
+	bb := bytes.NewBuffer([]byte{})
+	binary.Write(bb, binary.BigEndian, x)
+	return bb.Bytes()
+}
+
+// Packet to packet msg
+func Packet(msg []byte) []byte {
+	s := make([]byte, 0)
+	return append(append(s, int2byte(len(msg))...), msg...)
+}
+
 func sender(conn net.Conn, wg *sync.WaitGroup) {
 	defer wg.Done()
-	for i := 0; i < 30; i++ {
+	for i := 0; i < 11; i++ {
 		data := fmt.Sprintf("{\"ID\":%d, \"Name\":\"user-%d\"}", i, i)
-		n, err := conn.Write([]byte(data))
+		n, err := conn.Write(Packet([]byte(data)))
 		if err != nil {
 			log.Println(err.Error())
-			return
+			continue
 		}
-		fmt.Printf("%d: write %d data\n", i, n)
+		fmt.Printf("index %d: write %d data\n", i, n)
 	}
 }
