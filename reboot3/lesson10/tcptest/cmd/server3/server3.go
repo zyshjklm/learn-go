@@ -11,6 +11,16 @@ import (
 	"github.com/jkak/learn-go/reboot3/lesson10/tcptest/cmd/common"
 )
 
+const (
+	MaxQueueSize = 5
+)
+
+type Job struct {
+	conn net.Conn
+}
+
+var jobQueue = make(chan Job, MaxQueueSize)
+
 // TCPServer for tcp server
 func TCPServer(host string, port uint16) {
 	addr, err := common.NewServerInfo("tcp", host, port)
@@ -24,16 +34,28 @@ func TCPServer(host string, port uint16) {
 	}
 	defer l.Close()
 
+	// process job from chan
+	go func() {
+		for {
+			time.Sleep(time.Second * 1)
+			select {
+			case job := <-jobQueue:
+				go handleNewFunc(job.conn)
+			}
+		}
+	}()
+
 	for {
 		conn, err := l.Accept()
 		fmt.Printf("conn from %+v\n", conn.RemoteAddr().String())
 		if err != nil {
 			log.Fatal(err)
 		}
-		// Handle the connection in a new goroutine.
-		// The loop then returns to accepting, so that
-		// multiple connections may be served concurrently.
-		go handleNewFunc(conn)
+		// go handleNewFunc(conn)
+		if len(jobQueue) == MaxQueueSize {
+			fmt.Println("---- job queue full...")
+		}
+		jobQueue <- Job{conn: conn}
 	}
 }
 

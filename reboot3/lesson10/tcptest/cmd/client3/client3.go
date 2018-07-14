@@ -18,17 +18,19 @@ func ConnectServer(host string, port uint16) {
 		log.Fatal(err)
 	}
 
-	conn, err := net.Dial(addr.Proto, fmt.Sprintf("%s:%d", addr.Host, addr.Port))
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer conn.Close()
-
-	common.SetTimeout(conn, 3)
 	var wg sync.WaitGroup
-	wg.Add(1)
-	go sender(conn, &wg)
-	wg.Wait()
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		conn, err := net.Dial(addr.Proto, fmt.Sprintf("%s:%d", addr.Host, addr.Port))
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer conn.Close()
+
+		common.SetTimeout(conn, 3)
+		go sender(conn, &wg)
+		wg.Wait()
+	}
 }
 
 func int2byte(n int) []byte {
