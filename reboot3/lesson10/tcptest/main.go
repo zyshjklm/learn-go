@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/jkak/learn-go/reboot3/lesson09/tcptest/cmd"
+import "github.com/jkak/learn-go/reboot3/lesson10/tcptest/cmd"
 
 func main() {
 	cmd.Execute()

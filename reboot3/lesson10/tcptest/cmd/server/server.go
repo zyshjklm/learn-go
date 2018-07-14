@@ -1,4 +1,4 @@
-package tcpServer
+package server
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/jkak/learn-go/reboot3/lesson09/tcptest/cmd/common"
+	"github.com/jkak/learn-go/reboot3/lesson10/tcptest/cmd/common"
 )
 
 // TCPServer for tcp server

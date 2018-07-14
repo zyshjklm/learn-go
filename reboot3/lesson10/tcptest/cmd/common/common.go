@@ -25,6 +25,7 @@ func NewServerInfo(proto, host string, port uint16) (*ServerInfo, error) {
 	}, nil
 }
 
+// SetTimeout for timeout
 func SetTimeout(conn net.Conn, timeout int) {
 	conn.SetReadDeadline(time.Now().Add(time.Duration(timeout) * time.Second))
 	conn.SetWriteDeadline(time.Now().Add(time.Duration(timeout) * time.Second))

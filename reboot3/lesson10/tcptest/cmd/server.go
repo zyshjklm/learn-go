@@ -17,7 +17,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/jkak/learn-go/reboot3/lesson10/tcptest/cmd/tcpServer"
+	"github.com/jkak/learn-go/reboot3/lesson10/tcptest/cmd/server"
 	"github.com/spf13/cobra"
 )
 
@@ -33,7 +33,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("server called")
-		tcpServer.TCPServer("127.0.0.1", 2000)
+		server.TCPServer("127.0.0.1", 2000)
 	},
 }
 

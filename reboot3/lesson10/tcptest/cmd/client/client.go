@@ -1,4 +1,4 @@
-package tcpClient
+package client
 
 import (
 	"bufio"
@@ -7,7 +7,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/jkak/learn-go/reboot3/lesson09/tcptest/cmd/common"
+	"github.com/jkak/learn-go/reboot3/lesson10/tcptest/cmd/common"
 )
 
 // ConnectServer connect to server
