@@ -17,7 +17,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/jkak/learn-go/reboot3/lesson09/tcptest/cmd/tcpClient"
+	"github.com/jkak/learn-go/reboot3/lesson10/tcptest/cmd/tcpClient"
 	"github.com/spf13/cobra"
 )
 

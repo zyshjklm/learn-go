@@ -1,6 +1,10 @@
 package common
 
-import "fmt"
+import (
+	"fmt"
+	"net"
+	"time"
+)
 
 // ServerInfo server info
 type ServerInfo struct {
@@ -19,4 +23,9 @@ func NewServerInfo(proto, host string, port uint16) (*ServerInfo, error) {
 		Port:  port,
 		Proto: proto,
 	}, nil
+}
+
+func SetTimeout(conn net.Conn, timeout int) {
+	conn.SetReadDeadline(time.Now().Add(time.Duration(timeout) * time.Second))
+	conn.SetWriteDeadline(time.Now().Add(time.Duration(timeout) * time.Second))
 }
