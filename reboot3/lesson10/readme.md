@@ -209,3 +209,52 @@ index 10: write 31 data
 
 
 
+### dispatcher
+
+参考之前整理过的资料：
+
+research/queue2worker/readme.md
+
+
+
+PS: 日志
+
+```go
+func init(){
+	log.SetFlags(log.Llongfile|log.LstdFlags)
+	// Llongfile full file name and line number: /a/b/c/d.go:23
+	// Lshortfile final file name element and line 
+	// LstdFlags initial values for the standard logger 
+}
+```
+
+
+
+### CR: code review
+
+refer from: https://github.com/guanyuding/mytcp/blob/master/cr.md
+
+
+
+```go
+type Label string
+
+func (l Label) String() string{
+  return string(l)
+}
+
+TOR = "tor/11.22.33.44"
+```
+
+
+
+git
+
+```shell
+git rebase
+
+git cherry-pick
+# 选择想要的commit，进行拉取，而不是让别人直接push
+```
+
+
