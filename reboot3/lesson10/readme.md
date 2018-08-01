@@ -122,3 +122,90 @@ client called
 
 
 
+
+
+
+
+#### 3）队列消费
+
+**server3**
+
+基于前一对示例。
+
+client3增加发送的数量，并使用wg控制。
+
+server3则使用chan做队列。先启动消费协程。不断读取队列并处理。然后启动tcp的处理函数。监听请求，将数据解包后，放入chan中。
+
+队列满时打印一下提示信息。
+
+server3
+
+```shell
+# go run ../main.go server3
+server3 called
+listenning...
+conn from 127.0.0.1:57936
+{"ID":0, "Name":"user-0"}
+{"ID":1, "Name":"user-1"}
+{"ID":2, "Name":"user-2"}
+{"ID":3, "Name":"user-3"}
+{"ID":4, "Name":"user-4"}
+{"ID":5, "Name":"user-5"}
+{"ID":6, "Name":"user-6"}
+{"ID":7, "Name":"user-7"}
+{"ID":8, "Name":"user-8"}
+{"ID":9, "Name":"user-9"}
+{"ID":10, "Name":"user-10"}
+conn from 127.0.0.1:57937
+conn from 127.0.0.1:57938
+conn from 127.0.0.1:57939
+conn from 127.0.0.1:57940
+conn from 127.0.0.1:57941
+conn from 127.0.0.1:57942
+---- job queue full...
+2018/08/01 22:49:53 EOF
+2018/08/01 22:49:54 EOF
+conn from 127.0.0.1:57943
+---- job queue full...
+{"ID":0, "Name":"user-0"}
+{"ID":1, "Name":"user-1"}
+{"ID":2, "Name":"user-2"}
+{"ID":3, "Name":"user-3"}
+{"ID":4, "Name":"user-4"}
+{"ID":5, "Name":"user-5"}
+{"ID":6, "Name":"user-6"}
+{"ID":7, "Name":"user-7"}
+{"ID":8, "Name":"user-8"}
+{"ID":9, "Name":"user-9"}
+{"ID":10, "Name":"user-10"}
+conn from 127.0.0.1:57944
+---- job queue full...
+```
+
+client3
+
+```shell
+# go run ../main.go client3
+client3 called
+index 0: write 29 data
+index 1: write 29 data
+index 2: write 29 data
+index 3: write 29 data
+
+index 6: write 29 data
+index 7: write 29 data
+index 8: write 29 data
+
+index 7: write 29 data
+index 8: write 29 data
+index 9: write 29 data
+index 10: write 31 data
+index 0: write 29 data
+
+index 8: write 29 data
+index 9: write 29 data
+index 10: write 31 data
+```
+
+
+
