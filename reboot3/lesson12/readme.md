@@ -61,7 +61,7 @@ hello golang from myhandle...%
 
 
 
-#### mux多路选择器
+#### mux多路利用器
 
 httpMux1.go
 
@@ -99,5 +99,37 @@ from world...%
 
 # curl localhost:7878/
 hello golang...%
+```
+
+
+
+多路复用
+
+http.HandleFunc(pattern, handlerF)
+底层的muxEntry做来的存储路由信息。
+
+
+
+```go
+http.Handle()       注册处理器，默认ServeHTTP方法。即某个对象的方法。
+http.HandleFunc()   注册处理器函数。
+DefaultServeMux
+// ServeMux的Handler方法，用于根据pattern来进行方法的路由选择。
+
+ServeMux匹配规则
+// 将httpMux2.go中 
+// http.HandleFunc("/hello", helloHandler) 改为：
+// http.HandleFunc("/hello/", helloHandler) 观察效果
+```
+
+运行效果：
+
+```shell
+# curl localhost:7878/hello
+<a href="/hello/">Moved Permanently</a>.
+
+# curl localhost:7878/hello/
+from hello...%
+
 ```
 
