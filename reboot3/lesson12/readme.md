@@ -133,3 +133,70 @@ from hello...%
 
 ```
 
+
+
+#### 装饰器
+
+基于`http.HandleFunc`的装饰函数打印日志
+
+```go
+func logHTTP(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		p := runtime.FuncForPC(reflect.ValueOf(h).Pointer())
+		name := p.Name()
+		fmt.Println("handler func called = ", name)
+		h(w, req)
+	}
+}
+```
+
+效果
+
+```shell
+# go run httpDecorator1.go
+handler func called =  main.helloHandler
+
+# curl localhost:7878/hello/
+hello golang...%                                                                                                       
+
+# curl localhost:7878/hello
+from hello...%
+```
+
+当请求localhost:7878/hello时，会命中调用打印日志。
+
+
+
+基于`http.Handler`接口的装饰函数
+
+```go
+func logHandler(h http.Handler) http.Handler {
+	temp := func(w http.ResponseWriter, r *http.Request) {
+		fmt.Printf("Handler called - %T\n", h)
+		h.ServeHTTP(w, r)
+	}
+	return http.HandlerFunc(temp)
+}
+```
+
+注意这里与上一个示例的区别。
+
+* http.HandlerFunc是一个type of `func(ResponseWriter, *Request)`
+* http.HandlerFunc类型有一个ServeHTTP方法。该方法调用f(w,r)
+* http.HandlerFunc(f(w,r))时，实际是：Handler that calls f
+
+执行效果
+
+```shell
+# go run httpDecorator2.go
+Handler called - *main.myhello
+
+# curl localhost:7878/hello/
+hello root%                                                                                                            
+
+# curl localhost:7878/hello
+hello from golang%
+```
+
+
+
