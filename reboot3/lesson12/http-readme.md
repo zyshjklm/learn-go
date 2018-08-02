@@ -200,3 +200,34 @@ hello from golang%
 
 
 
+二重装饰
+
+基于httpDecorator2.go进行二次装饰。
+
+```go
+func timerHandler(h http.Handler) http.Handler {
+	temp := func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now().UnixNano()
+		h.ServeHTTP(w, r)
+		end := time.Now().UnixNano()
+		fmt.Printf("Handler used: %.6f second\n", float64(end-start)/1e9)
+	}
+	return http.HandlerFunc(temp)
+}
+
+http.Handle("/hello", timerHandler(logHandler(&handleHello)))
+```
+
+运行效果
+
+```shell
+# go run httpDecorator3.go
+Handler called - *main.myhello
+Handler used: 0.000068 second
+
+# curl localhost:7878/hello
+hello from golang%
+```
+
+
+
