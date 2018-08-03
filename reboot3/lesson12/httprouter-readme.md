@@ -75,3 +75,45 @@ Content-Type: text/plain; charset=utf-8
 Protected code here!
 ```
 
+
+
+### 3）二级装饰
+
+```go
+router.GET(
+  "/protected/", 
+  PermAuth(BasicAuth(Protected, user, pass), user, pass)
+)
+```
+
+测试
+
+```shell
+# curl -i localhost:7878/protected/ -u jungle:secret
+HTTP/1.1 200 OK
+Date: Fri, 03 Aug 2018 13:53:42 GMT
+Content-Length: 21
+Content-Type: text/plain; charset=utf-8
+
+Protected code here!
+
+# curl -i localhost:7878/protected/ -u jungle:xx
+HTTP/1.1 401 Unauthorized
+Content-Type: text/plain; charset=utf-8
+Www-Authenticate: Basic realm=Restricted perm
+X-Content-Type-Options: nosniff
+Date: Fri, 03 Aug 2018 13:53:47 GMT
+Content-Length: 13
+
+Unauthorized
+
+```
+
+
+
+### 常用路由
+
+* github.com/julienschmidt/httprouter
+* github.com/gorilla/mux  比较轻量。k8s在使用
+* beego
+* gin
